@@ -9,5 +9,4 @@ class MainPageProvider extends ChangeNotifier {
     _selectedIndex = index;
     notifyListeners();  // Thông báo cho tất cả các widget nghe được khi trạng thái thay đổi
   }
-
 }
