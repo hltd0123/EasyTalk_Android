@@ -14,15 +14,6 @@ class ContainerMenuItem extends StatelessWidget {
         children: [
           // Hiển thị danh sách MenuItem
           ...menuItems,
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              CircleAvatar(
-                backgroundColor: Colors.black38,
-                child: Text('0/5', style: TextStyle(color: Colors.white)),
-              ),
-            ],
-          ),
         ],
       ),
     );

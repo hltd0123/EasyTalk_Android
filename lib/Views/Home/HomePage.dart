@@ -1,8 +1,7 @@
 import 'package:dacn/Views/WidgetBuiding/ContainerMenuItem.dart';
 import 'package:dacn/Views/WidgetBuiding/MenuItem.dart';
-import 'package:dacn/Views/WidgetBuiding/PreviewArticle.dart';
-import 'package:dacn/Views/WidgetBuiding/PreviewArticleContainer.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,107 +11,116 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final List<String> _images = [
+    'assets/hutech1.jpg',
+    'assets/hutech2.jpg',
+    'assets/hutech3.jpg',
+  ];
+
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _startAutoScroll();
+  }
+
+  void _startAutoScroll() {
+    Timer.periodic(const Duration(seconds: 3), (Timer timer) {
+      if (_currentPage < _images.length - 1) {
+        _currentPage++;
+      } else {
+        _currentPage = 0;
+      }
+      _pageController.animateToPage(
+        _currentPage,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Row(
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFF81C784), // Xanh lá cây nhạt
-                    Color(0xFF64B5F6), // Xanh dương nhạt
-                    Color(0xFF4CAF50), // Xanh lá cây đậm
-                  ],
-                  stops: [0.0, 0.5, 1.0],
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.all(16.0),
+          color: Colors.white,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+              SizedBox(
+                height: 200, // Chiều cao của slider
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: _images.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.asset(
+                          _images[index],
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
-              width: MediaQuery.of(context).size.width,
-              constraints: BoxConstraints(
-                minHeight: MediaQuery.of(context).size.height * 0.8,
+              const SizedBox(height: 20),
+              const Text(
+                'Chào mừng bạn đến với EasyTalk',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
               ),
-              padding: const EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const Text(
-                      'Bài phát âm đề xuất',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF3E2723)),
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-
-                    const PreviewArticleContainer(
-                      articles: [
-                        PreviewArticle(
-                          id: '1',
-                          title: 'Khám Phá Thế Giới Công Nghệ Mới',
-                          content: 'Trong thế giới công nghệ ngày nay, chúng ta đang chứng kiến sự phát triển vượt bậc của AI, IoT, và các công nghệ tiên tiến khác. Chúng đang thay đổi cách chúng ta sống, làm việc, và tương tác với nhau.',
-                        ),
-                        PreviewArticle(
-                          id: '2',
-                          title: 'Lập Trình Flutter Dễ Dàng Hơn Bạn Nghĩ',
-                          content: 'Flutter đã trở thành một công cụ phát triển ứng dụng di động mạnh mẽ. Với khả năng hỗ trợ đa nền tảng, lập trình viên có thể tạo ra những ứng dụng đẹp mắt và mượt mà chỉ với một mã nguồn duy nhất.',
-                        ),
-                        PreviewArticle(
-                          id: '3',
-                          title: 'Lợi Ích Của Việc Tập Thể Dục Đều Đặn',
-                          content: 'Tập thể dục không chỉ giúp bạn duy trì sức khỏe mà còn là một yếu tố quan trọng để cải thiện tinh thần. Việc tập luyện đều đặn giúp giảm căng thẳng và tăng cường sức đề kháng.',
-                        ),
-                        PreviewArticle(
-                          id: '4',
-                          title: 'Cách Chọn Món Ăn Lành Mạnh Mỗi Ngày',
-                          content: 'Việc lựa chọn món ăn là rất quan trọng để duy trì sức khỏe. Hãy ưu tiên các thực phẩm tươi sống, nhiều vitamin và khoáng chất để có một cơ thể khỏe mạnh.',
-                        ),
-                        PreviewArticle(
-                          id: '5',
-                          title: 'Các Mẹo Tiết Kiệm Thời Gian Khi Làm Việc Từ Xa',
-                          content: 'Làm việc từ xa có thể mang lại nhiều lợi ích, nhưng cũng có những thử thách. Để tiết kiệm thời gian và duy trì năng suất, bạn cần có một lịch trình làm việc rõ ràng và không bị xao nhãng.',
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-
-                    const Text(
-                      'Chảo mửng trở lại',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-
-                    const ContainerMenuItem(
-                      menuItems: [
-                        MenuItem(
-                          icon: Icon(Icons.book, color: Colors.yellow,),
-                          text: 'Luyện tập ngữ pháp',
-                          colorArrow: Colors.yellow,
-                        ),
-                        MenuItem(
-                          icon: Icon(Icons.record_voice_over, color: Colors.red,),
-                          text: 'Cải thiện Phát âm',
-                          colorArrow: Colors.red,
-                        ),
-                        MenuItem(
-                          icon: Icon(Icons.chat, color: Colors.blue,),
-                          text: 'Luyện tập từ vựng',
-                          colorArrow: Colors.blue,
-                        ),
-                        MenuItem(
-                          icon: Icon(Icons.mark_chat_read, color: Colors.green,),
-                          text: 'Chat box AI',
-                          colorArrow: Colors.green,
-                        ),
-                      ],
-                    ),
-                  ],
-                )
+              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+              const ContainerMenuItem(
+                menuItems: [
+                  MenuItem(
+                    icon: Icon(Icons.book, color: Colors.greenAccent),
+                    text: 'Bài học',
+                    colorArrow: Colors.greenAccent,
+                    menuOptions: [
+                      {'icon': Icons.chrome_reader_mode, 'text': 'Ngữ pháp'}, // Icon và text cho tùy chọn 1
+                      {'icon': Icons.transcribe_rounded, 'text': 'Phát âm'}, // Icon và text cho tùy chọn 2
+                      {'icon': Icons.library_books, 'text': 'FlashCard'}, // Icon và text cho tùy chọn 3
+                    ], // Các mục lựa chọn
+                  ),
+                  MenuItem(
+                    icon: Icon(Icons.menu_book, color: Colors.blue),
+                    text: 'Luyện tập',
+                    colorArrow: Colors.blue,
+                    menuOptions: [
+                      {'icon': Icons.chrome_reader_mode, 'text': 'Ngữ pháp'}, // Icon và text cho tùy chọn 1
+                      {'icon': Icons.transcribe_rounded, 'text': 'Phát âm'},// Icon và text cho tùy chọn 2
+                      {'icon': Icons.type_specimen_rounded, 'text': 'Từ vựng'},// Icon và text cho tùy chọn 3
+                    ], // Các mục lựa chọn
+                  ),
+                  MenuItem(
+                    icon: Icon(Icons.chat , color: Colors.yellowAccent),
+                    text: 'Chat AI',
+                    colorArrow: Colors.blue,
+                  ),
+                  MenuItem(
+                    icon: Icon(Icons.layers , color: Colors.deepOrange),
+                    text: 'Tra cứu từ điển',
+                    colorArrow: Colors.blue,
+                  ),
+                ],
               ),
-            )
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -14,8 +14,6 @@ import 'package:provider/provider.dart';
 
 enum MainPageBottomNavigation {
   home(icon: Icons.home, label: 'Trang chủ', selectedItem: 0),
-  lessons(icon: Icons.book, label: 'Bài học', selectedItem: 1),
-  account(icon: Icons.person, label: 'Tài khoản', selectedItem: 2);
 
   final IconData icon;
   final String label;
@@ -67,10 +65,10 @@ class MainPage extends StatelessWidget {
           begin: Alignment.centerRight,
           end: Alignment.topLeft,
           colors: [
-            Color(0xFF0D47A1), // Xanh nước biển đậm
-            Color(0xFF1976D2), // Xanh nước biển vừa
-            Color(0xFF42A5F5), // Xanh nước biển nhạt
             Color(0xFF64B5F6), // Xanh dương nhạt
+            Color(0xFF42A5F5), // Xanh nước biển nhạt
+            Color(0xFF1976D2), // Xanh nước biển vừa
+            Color(0xFF0D47A1), // Xanh nước biển đậm
           ],
           stops: [0.0, 0.3, 0.7, 1.0], // Các điểm chuyển màu mềm mại
         ),
@@ -84,7 +82,6 @@ class MainPage extends StatelessWidget {
               duration: const Duration(milliseconds: 300),
               child: Icon(
                 item.icon,
-                color: isSelected ? Colors.red : Colors.white,
                 size: isSelected ? 30 : 25, // Thay đổi kích thước của icon khi được chọn
               ),
             ),
@@ -92,7 +89,6 @@ class MainPage extends StatelessWidget {
           );
         }).toList(),
         currentIndex: initialIndex,
-        selectedItemColor: Colors.red,
         unselectedItemColor: Colors.white,
         onTap: onTap,
       ),
