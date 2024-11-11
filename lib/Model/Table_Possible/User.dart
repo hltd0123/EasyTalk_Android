@@ -38,4 +38,8 @@ class Users {
       active: json['active'] ?? true,
     );
   }
+
+  String getTableName(){
+    return 'users';
+  }
 }

@@ -1,4 +1,4 @@
-import 'package:dacn/Model/QuestionStage.dart';
+import 'package:dacn/Model/No_Table_Possible/QuestionStage.dart';
 
 class Stage {
   String id;
@@ -55,5 +55,9 @@ class Stage {
           .map((q) => QuestionStage.fromJson(q as Map<String, dynamic>))
           .toList(),
     );
+  }
+
+  String getTableName(){
+    return 'stages';
   }
 }

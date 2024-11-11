@@ -1,4 +1,4 @@
-import 'package:dacn/Model/QuestionExercise.dart';
+import 'package:dacn/Model/No_Table_Possible/QuestionExercise.dart';
 
 class GrammarExercise {
   String id;
@@ -33,5 +33,9 @@ class GrammarExercise {
           .map((q) => QuestionExercise.fromJson(q as Map<String, dynamic>))
           .toList(),
     );
+  }
+
+  String getTableName(){
+    return 'grammarexercises';
   }
 }

@@ -36,4 +36,8 @@ class FlashCardList {
       'createdAt': {'\$date': _createdAt.toIso8601String()},
     };
   }
+
+  String getTableName(){
+    return 'flashcardlists';
+  }
 }

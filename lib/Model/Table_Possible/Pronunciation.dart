@@ -34,4 +34,8 @@ class Pronunciation {
       images: List<String>.from(json['images'] ?? []),
     );
   }
+
+  String getTableName(){
+    return 'pronunciations';
+  }
 }
