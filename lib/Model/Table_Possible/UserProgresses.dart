@@ -34,4 +34,8 @@ class UserProgresses {
       experiencePoints: json['experiencePoints'] ?? 0,
     );
   }
+
+  String getTableName(){
+    return 'userprogresses';
+  }
 }

@@ -1,4 +1,4 @@
-import 'PronunciationQuestion.dart';
+import '../No_Table_Possible/PronunciationQuestion.dart';
 
 class PronunciationExercise {
   final String _id;
@@ -44,5 +44,9 @@ class PronunciationExercise {
       'createdAt': {'\$date': _createdAt.toIso8601String()},
       'updatedAt': {'\$date': _updatedAt.toIso8601String()},
     };
+  }
+
+  String getTableName(){
+    return 'pronunciationexercises';
   }
 }

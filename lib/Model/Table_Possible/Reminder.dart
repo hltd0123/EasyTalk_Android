@@ -42,4 +42,8 @@ class Reminder {
       additionalInfo: Map<String, dynamic>.from(json['additionalInfo'] ?? {}),
     );
   }
+
+  String getTableName(){
+    return 'reminders';
+  }
 }
