@@ -1,45 +1,104 @@
-import 'package:dacn/Views/WidgetBuiding/CardItem.dart';
 import 'package:flutter/material.dart';
 import 'package:dacn/Views/WidgetBuiding/MenuItem.dart';
 
 class AccountDetailPage extends StatefulWidget {
   const AccountDetailPage({super.key});
-
   @override
   _AccountDetailPageState createState() => _AccountDetailPageState();
+}
+class _AccountDetailPage extends State<AccountDetailPage> {
+  // Biến lưu trữ chế độ hiện tại (sáng hoặc tối)
+  ThemeMode _themeMode = ThemeMode.light;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter App',
+      theme: ThemeData.light(), // Định nghĩa theme sáng
+      darkTheme: ThemeData.dark(), // Định nghĩa theme tối
+      themeMode: _themeMode, // Áp dụng theme hiện tại
+      home: const AccountDetailPage(),
+    );
+  }
 }
 
 class _AccountDetailPageState extends State<AccountDetailPage> {
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.brightness_6),
+            onPressed: () {
+            },
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
         child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFF81C784), // Xanh lá cây nhạt
-                Color(0xFF64B5F6), // Xanh dương nhạt
-                Color(0xFF4CAF50), // Xanh lá cây đậm
-              ],
-              stops: [0.0, 0.5, 1.0],
-            ),
-          ),
-          width: MediaQuery.of(context).size.width,
-          constraints: BoxConstraints(
-            minHeight: MediaQuery.of(context).size.height * 0.8,
-          ),
           padding: const EdgeInsets.all(16.0),
-          child: Column( // Thay Row bằng Column để các widget con có thể sắp xếp theo chiều dọc
+          color: Colors.white,
+          child: Column(
             children: [
-              CardItem(
-                title: 'Char',
-                imageUrl: 'https://png.pngtree.com/png-clipart/20230414/original/pngtree-red-apple-fruit-realistic-transparent-png-image_9057112.png',
-                points: '300',
+              // CircleAvatar
+              Center(
+                child: CircleAvatar(
+                  radius: 80, // Kích thước avatar
+                  backgroundImage: AssetImage('assets/avatar.jpg'),
+                  backgroundColor: Colors.grey[200],
+                ),
+              ),
+              const SizedBox(height: 16.0),
+
+              // Nút chỉnh sửa dưới CircleAvatar
+              OutlinedButton(
+                onPressed: () {
+                  // Thêm hành động chỉnh sửa avatar ở đây
+                },
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: Colors.grey), // Màu viền xám
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0), // Bo tròn viền
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Chỉnh sửa',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(width: 10),
+                    Icon(Icons.edit, color: Colors.grey),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16.0),
+
+              // Các MenuItem không có menuOptions và mũi tên
+              MenuItem(
+                icon: const Icon(Icons.account_circle, color: Colors.white),
+                text: 'Thông tin tài khoản',
+                colorArrow: Colors.blue,
+              ),
+              const SizedBox(height: 8.0),
+              MenuItem(
+                icon: const Icon(Icons.notifications, color: Colors.white),
+                text: 'Thông báo',
+                colorArrow: Colors.blue,
+              ),
+              const SizedBox(height: 8.0),
+              MenuItem(
+                icon: const Icon(Icons.settings, color: Colors.white),
+                text: 'Cài đặt',
+                colorArrow: Colors.blue,
+              ),
+              const SizedBox(height: 8.0),
+              MenuItem(
+                icon: const Icon(Icons.help, color: Colors.white),
+                text: 'Trợ giúp & Phản hồi',
+                colorArrow: Colors.blue,
               ),
             ],
           ),
