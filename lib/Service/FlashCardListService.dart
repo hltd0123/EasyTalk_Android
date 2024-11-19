@@ -9,12 +9,6 @@ class FlashCardListService {
   static String domain = dotenv.env['domain']!;
 
   static Future<String?> addFlashCardList(FlashCardList flashCardList) async {
-    // Lấy token từ SharedPreferences
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-
-    assert(token != null);
-
     // Nếu flashCardList đã có id thì không thêm nữa
     if (flashCardList.id != null) {
       return null;
@@ -29,16 +23,15 @@ class FlashCardListService {
       Uri.parse('$domain/flashcards/create'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',  // Thêm token vào header
       },
       body: json.encode(dataAdd),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       final data = json.decode(response.body);
 
       // Nếu API trả về thành công
-      if (data['success']) {
+      if (data['success'] == true) {
         return data['flashcardList']['insertedId'];  // Trả về insertedId nếu thành công
       }
     }
@@ -47,17 +40,11 @@ class FlashCardListService {
   }
 
   static Future<bool> deleteFlashCardList(String flashcardListId) async {
-    // Lấy token từ SharedPreferences
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-
-    assert(token != null);
 
     final response = await http.delete(
       Uri.parse('/flashcards/$flashcardListId'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',  // Thêm token vào header
       },
     );
 
@@ -71,10 +58,6 @@ class FlashCardListService {
   }
 
   static Future<bool> updateFlashCardList(FlashCardList flashCardList) async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-
-    assert(token != null);
 
     if(flashCardList.id == null){
       return false;
@@ -89,7 +72,6 @@ class FlashCardListService {
       Uri.parse('$domain/flashcards/flashcardlist/${flashCardList.id}'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',  // Thêm token vào header
       },
       body: json.encode(dataUpdate), // Dùng toJson để gửi đầy đủ dữ liệu
     );
@@ -102,16 +84,11 @@ class FlashCardListService {
     }
   }
 
-  static Future<Map<String, dynamic>> getFlashCardListOnPage(int page) async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-    assert(token != null);
-
+  static Future<Map<String, dynamic>> getFlashCardListOnPage({int page = 1}) async {
     final response = await http.get(
       Uri.parse('$domain/flashcards/api/flashcard-list?page=$page'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
       },
     );
 

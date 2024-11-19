@@ -48,7 +48,7 @@ class FlashCardService {
   }
 
 
-  static Future<bool> deleteFlashCard(String flashcardId) async {
+  static Future<bool> deleteFlashCardOnId(String flashcardId) async {
     // Lấy token từ SharedPreferences
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
@@ -105,7 +105,7 @@ class FlashCardService {
       final data = json.decode(response.body);
 
       // Nếu API trả về thành công
-      return data['success'];
+      return data['success'] == true;
     } else {
       return false; // Trả về false nếu không thành công
     }

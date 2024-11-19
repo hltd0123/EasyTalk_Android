@@ -8,17 +8,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 class GrammarExerciseService {
   static String domain = dotenv.env['domain']!;
 
-  static Future<GrammarExercise?> getGrammarExercise(String grammarExerciseId) async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-
-    assert(token != null);
-
+  static Future<GrammarExercise?> getGrammarExerciseOnId(String grammarExerciseId) async {
     final response = await http.get(
       Uri.parse('$domain/grammar-exercise/api/$grammarExerciseId'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
       },
     );
 
@@ -30,17 +24,11 @@ class GrammarExerciseService {
     }
   }
 
-  static Future<Map<String, dynamic>> getGrammarExercisesOnPage(int page, int limit) async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-
-    assert(token != null);
-
+  static Future<Map<String, dynamic>> getGrammarExercisesOnPage([int page = 1, int limit = 2]) async {
     final response = await http.get(
       Uri.parse('$domain/grammar-exercise/api/grammar-exercises?page=$page&limit=$limit'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
       },
     );
 
