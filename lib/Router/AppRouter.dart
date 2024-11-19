@@ -1,5 +1,6 @@
 import 'package:dacn/Views/Home/AcountDetailPage.dart';
 import 'package:dacn/Views/Home/HomePage.dart';
+import 'package:dacn/Views/Home/LuyenNguPhap.dart';
 import 'package:dacn/Views/Home/MainPage.dart';
 import 'package:flutter/material.dart';
 
@@ -7,8 +8,8 @@ class AppRouter {
   //Định nghĩa các tham số để truy xuất dễ dàng
   static const String home = '/home';
   static const String main = '/main';
-  static const String lessons = '/lessons';
-  static const String account = '/account';
+  static const String nguphap = '/nguphap';
+  static const String setting = '/setting';
 
   //Điều hướng theo tham số
   static Route<dynamic>? generateRoute(RouteSettings settings) {
@@ -17,7 +18,9 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => MainPage());
       case home:
         return MaterialPageRoute(builder: (_) => HomePage());
-      case account:
+      case nguphap:
+        return MaterialPageRoute(builder: (_) => HomeNP());
+      case setting:
         return MaterialPageRoute(builder: (_) => AccountDetailPage());
       default:
         return MaterialPageRoute(
