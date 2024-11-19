@@ -25,12 +25,9 @@ class _StudyPagePhatAmState extends State<StudyPagePhatAm> {
   Future<List<Pronunciation>> fetchPronunciations() async {
     try {
       final data = await PronunciationService.getPronunciationList();
-      print('Step 1\n');
       List<Pronunciation> pronunciations = GetDataFromMap.getPronunciations(data) ?? [];
-      print('Step 2\n');
       return pronunciations;
     } catch (e) {
-      print('Failed to load pronunciations: $e\n\n\n');
       throw Exception('Failed to load pronunciations: $e');
     }
   }

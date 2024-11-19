@@ -32,7 +32,6 @@ class PronunciationService {
       },
     );
 
-    print('aaaaaaaaaaaaaaaaaaaa');
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       return {
