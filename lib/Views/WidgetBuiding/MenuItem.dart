@@ -87,20 +87,24 @@ class _MenuItemState extends State<MenuItem> {
                 children: widget.menuOptions!.map((option) {
                   IconData iconData = option['icon'];
                   String text = option['text'];
+                  VoidCallback? onClick = option['onClick']; // Nhận hàm onClick
 
-                  return Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    margin: const EdgeInsets.only(bottom: 8.0),
-                    child: Row(
-                      children: [
-                        // Sử dụng màu của icon trong MenuItem cho icon trong menuOptions
-                        Icon(iconData, size: 16, color: widget.icon.color),
-                        SizedBox(width: 8),
-                        Text(
-                          text,
-                          style: const TextStyle(fontSize: 18, color: Colors.white),
-                        ),
-                      ],
+                  return GestureDetector(
+                    onTap: onClick, // Gọi hàm onClick khi tùy chọn được nhấn
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      margin: const EdgeInsets.only(bottom: 8.0),
+                      child: Row(
+                        children: [
+                          // Sử dụng màu của icon trong MenuItem cho icon trong menuOptions
+                          Icon(iconData, size: 16, color: widget.icon.color),
+                          SizedBox(width: 8),
+                          Text(
+                            text,
+                            style: const TextStyle(fontSize: 18, color: Colors.white),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 }).toList(),
