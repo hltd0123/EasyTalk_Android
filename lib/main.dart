@@ -1,12 +1,13 @@
 import 'package:dacn/Router/AppRouter.dart';
 import 'package:dacn/Views/Home/MainPage.dart';
 import 'package:dacn/Views/Home/MainPageProvider.dart';
+import 'package:dacn/Views/PhatAm/MainPagePhatAm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 void main() async{
-  await dotenv.load(fileName: ".env");
+  await dotenv.load();
   runApp(
     ChangeNotifierProvider(
       create: (context) => MainPageProvider(),
@@ -20,9 +21,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return const MaterialApp(
-      home: MainPage(),
-      initialRoute: AppRouter.main,
-      onGenerateRoute: AppRouter.generateRoute,
+      home: MainPagePhatAm(),
+      /*initialRoute: AppRouter.main,
+      onGenerateRoute: AppRouter.generateRoute,*/
     );
   }
 }

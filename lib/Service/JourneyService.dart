@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dacn/Model/UserProgress.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -7,6 +8,8 @@ import 'package:dacn/Model/Journey.dart';
 import 'package:dacn/Model/Leaderboard.dart';
 
 class JourneyService {
+  static String domain = dotenv.env['domain']!;
+
   static Future<Map<String, dynamic>> getJourneyList() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
@@ -14,7 +17,7 @@ class JourneyService {
     assert(token != null);
 
     final response = await http.get(
-      Uri.parse('/journey/api'),
+      Uri.parse('$domain/journey/api'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -46,7 +49,7 @@ class JourneyService {
     assert(token != null);
 
     final response = await http.get(
-      Uri.parse('/journey/api/$journeyId'),
+      Uri.parse('$domain/journey/api/$journeyId'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',

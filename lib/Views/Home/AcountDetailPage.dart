@@ -38,7 +38,7 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
             children: [
               CardItem(
                 title: 'Char',
-                imageUrl: 'https://png.pngtree.com/png-clipart/20230414/original/pngtree-red-apple-fruit-realistic-transparent-png-image_9057112.png',
+                imageUrl: 'https://www.shutterstock.com/shutterstock/photos/2506648107/display_1500/stock-photo-cluster-of-ripe-red-apples-hanging-from-a-tree-branch-2506648107.jpg',
                 points: '300',
               ),
             ],

@@ -1,12 +1,17 @@
+import 'package:dacn/Model/DictationExercise.dart';
 import 'package:dacn/Model/FlashCardList.dart';
+import 'package:dacn/Model/Grammar.dart';
 import 'package:dacn/Model/GrammarExercise.dart';
 import 'package:dacn/Model/Journey.dart';
 import 'package:dacn/Model/Leaderboard.dart';
 import 'package:dacn/Model/Page.dart';
+import 'package:dacn/Model/Pronunciation.dart';
+import 'package:dacn/Model/PronunciationExercises.dart';
+import 'package:dacn/Model/Stage.dart';
 import 'package:dacn/Model/UserProgress.dart';
+import 'package:dacn/Model/Vocabulary.dart';
 
 class GetDataFromMap{
-  // Lấy danh sách GrammarExercise từ map
   static List<GrammarExercise>? getGrammarExercisesList(Map<String, dynamic> data) {
     return data['grammarExercises'];
   }
@@ -15,34 +20,44 @@ class GetDataFromMap{
     return data['flashCardLists'];
   }
 
-  // Lấy thông tin phân trang Page từ map
   static Page? getPage(Map<String, dynamic> data) {
     return data['page'];
   }
 
-  // Phương thức giúp truy cập từng trường từ map trả về mà không cần vào class
   static Journey? getJourney(Map<String, dynamic> data) {
-    return data['journey']; // Trả về danh sách Journey
+    return data['journey'];
   }
 
   static List<Journey>? getJourneyList(Map<String, dynamic> data) {
-    return data['journeys']; // Trả về danh sách Journey
+    return data['journeys'];
   }
 
   static UserProgress? getUserProgress(Map<String, dynamic> data) {
-    return data['userProgress']; // Trả về thông tin tiến độ người dùng
+    return data['userProgress'];
   }
 
   static int? getCompletedGates(Map<String, dynamic> data) {
-    return data['completedGates']; // Trả về số gates đã hoàn thành
+    return data['completedGates'];
   }
 
   static int? getCompletedStages(Map<String, dynamic> data) {
-    return data['completedStages']; // Trả về số stages đã hoàn thành
+    return data['completedStages'];
   }
 
   static List<Leaderboard>? getLeaderboard(Map<String, dynamic> result) {
-    return result['leaderboard']; // Trả về danh sách leaderboard
+    return result['leaderboard'];
+  }
+
+  static List<Pronunciation>? getPronunciations(Map<String, dynamic> result) {
+    return result['pronunciations'];
+  }
+
+  static dynamic getUser(Map<String, dynamic> data) {
+    return data['user'];
+  }
+
+  static dynamic getAchievements(Map<String, dynamic> data) {
+    return data['achievements'];
   }
 
   static int? getTotalStages(Map<String, dynamic> data) {
@@ -55,5 +70,25 @@ class GetDataFromMap{
 
   static double? getProgressPercentage(Map<String, dynamic> data) {
     return data['progressPercentage'];
+  }
+
+  static List<PronunciationExercises> getPronunciationExercisesList(Map<String, dynamic> data) {
+    return data['pronunciationExercises'];
+  }
+
+  static Stage? getStage(Map<String, dynamic> data) {
+    return data['stage'];
+  }
+
+  static List<Vocabulary>? getVocabularyList(Map<String, dynamic> data) {
+    return data['vocabularies'];
+  }
+
+  static List<Grammar>? getGrammarList(Map<String, dynamic> data) {
+    return data['grammars'];
+  }
+
+  static List<DictationExercise>? getDictationExercise(Map<String, dynamic> data) {
+    return data['dictationExercises'];
   }
 }
