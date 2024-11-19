@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dacn/Views/Home/BaiHocNguPhap.dart';
 
 class HomeNP extends StatefulWidget {
   const HomeNP({super.key});
@@ -8,7 +9,6 @@ class HomeNP extends StatefulWidget {
 }
 
 class _HomeNPState extends State<HomeNP> {
-  // Danh sách các bài học, mỗi bài học gồm ảnh, tiêu đề và thông tin
   final List<Map<String, String>> lessons = [
     {
       'image': 'assets/hutech3.jpg',
@@ -22,197 +22,218 @@ class _HomeNPState extends State<HomeNP> {
     },
     {
       'image': 'assets/hutech3.jpg',
-      'title': 'Từ vựng hàng ngày',
-      'info': 'Mở rộng vốn từ vựng tiếng Anh qua các tình huống giao tiếp.',
-    },
-    {
-      'image': 'assets/hutech3.jpg',
-      'title': 'Câu hỏi và câu trả lời',
-      'info': 'Học cách tạo câu hỏi và câu trả lời trong tiếng Anh.',
-    },
-    {
-      'image': 'assets/hutech3.jpg',
-      'title': 'Các động từ bất quy tắc',
-      'info': 'Tìm hiểu về các động từ bất quy tắc và cách sử dụng chúng.',
+      'title': 'Câu điều kiện',
+      'info': 'Tìm hiểu về các câu điều kiện trong tiếng Anh.',
     },
     {
       'image': 'assets/hutech3.jpg',
       'title': 'Mệnh đề quan hệ',
-      'info': 'Hiểu về mệnh đề quan hệ và cách sử dụng trong câu.',
+      'info': 'Khám phá các mệnh đề quan hệ trong tiếng Anh.',
     },
     {
       'image': 'assets/hutech3.jpg',
-      'title': 'Các loại câu điều kiện',
-      'info': 'Khám phá các loại câu điều kiện trong tiếng Anh.',
+      'title': 'Câu phức',
+      'info': 'Học cách sử dụng câu phức trong tiếng Anh.',
+    },
+    {
+      'image': 'assets/hutech3.jpg',
+      'title': 'Các động từ bất quy tắc',
+      'info': 'Tìm hiểu về các động từ bất quy tắc trong tiếng Anh.',
+    },
+    {
+      'image': 'assets/hutech3.jpg',
+      'title': 'Danh từ và các loại danh từ',
+      'info': 'Khám phá các loại danh từ trong tiếng Anh.',
+    },
+    {
+      'image': 'assets/hutech3.jpg',
+      'title': 'Tính từ và trạng từ',
+      'info': 'Tìm hiểu cách sử dụng tính từ và trạng từ trong tiếng Anh.',
+    },
+    {
+      'image': 'assets/hutech3.jpg',
+      'title': 'Cấu trúc câu phức tạp',
+      'info': 'Học cách xây dựng các câu phức tạp trong tiếng Anh.',
+    },
+    {
+      'image': 'assets/hutech3.jpg',
+      'title': 'Giới từ trong tiếng Anh',
+      'info': 'Tìm hiểu cách sử dụng giới từ trong câu.',
+    },
+    {
+      'image': 'assets/hutech3.jpg',
+      'title': 'Thì hiện tại hoàn thành',
+      'info': 'Tìm hiểu về thì hiện tại hoàn thành trong tiếng Anh.',
     },
   ];
 
-  // Danh sách các bài viết đề xuất
-  final List<Map<String, String>> suggestedArticles = [
+  final List<Map<String, String>> suggestedLessons = [
     {
       'image': 'assets/hutech3.jpg',
-      'title': 'Ngữ pháp nâng cao',
-      'info': 'Tìm hiểu về các cấu trúc ngữ pháp nâng cao trong tiếng Anh.',
+      'title': 'Các động từ khuyết thiếu',
+      'info': 'Tìm hiểu các động từ khuyết thiếu trong tiếng Anh.',
     },
     {
       'image': 'assets/hutech3.jpg',
-      'title': 'Phát âm chuẩn',
-      'info': 'Các bài học giúp cải thiện kỹ năng phát âm tiếng Anh.',
+      'title': 'Các cấu trúc ngữ pháp phức tạp',
+      'info': 'Khám phá các cấu trúc ngữ pháp phức tạp trong tiếng Anh.',
     },
-    {
-      'image': 'assets/hutech3.jpg',
-      'title': 'Luyện nghe tiếng Anh',
-      'info': 'Bài học luyện nghe các đoạn hội thoại tiếng Anh.',
-    },
-    // Thêm bài viết khác nếu cần
+    // Thêm bài học đề xuất khác nếu cần
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0, // Tắt hiệu ứng bóng của AppBar
-        backgroundColor: Colors.transparent, // Tắt màu nền của AppBar
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: const Text(
+          'Bài học Ngữ pháp',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold, // In đậm tiêu đề
+          ),
+        ),
+        centerTitle: true,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Tiêu đề bài học ngữ pháp, căn giữa
-          const Center(
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                'Bài học Ngữ pháp',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.center, // Căn giữa tiêu đề
-              ),
-            ),
-          ),
-          // Danh sách bài học
-          Expanded(
-            child: ListView.builder(
-              itemCount: lessons.length + 1 + suggestedArticles.length, // Thêm 1 cho tiêu đề "Bài viết đề xuất"
-              itemBuilder: (context, index) {
-                if (index < lessons.length) {
-                  final item = lessons[index];
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      elevation: 4,
-                      child: Row(
-                        children: [
-                          // Ảnh đại diện của bài học
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(12.0),
-                            child: Image.asset(
-                              item['image']!,
-                              width: 100,
-                              height: 100,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          // Nội dung bài học: Tiêu đề và thông tin
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  item['title']!,
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  item['info']!,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+      body: ListView.builder(
+        itemCount: lessons.length + 1 + suggestedLessons.length, // Cộng thêm bài học đề xuất
+        itemBuilder: (context, index) {
+          if (index < lessons.length) {
+            // Hiển thị bài học chính
+            final lesson = lessons[index];
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BHNP(
+                      lesson: lesson,
+                      allLessons: lessons, // Truyền toàn bộ danh sách bài học
                     ),
-                  );
-                } else if (index == lessons.length) {
-                  // Hiển thị tiêu đề bài viết đề xuất
-                  return Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      'Bài viết đề xuất',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  );
-                } else {
-                  final item = suggestedArticles[index - lessons.length - 1];
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      elevation: 4,
-                      child: Row(
-                        children: [
-                          // Ảnh đại diện của bài viết đề xuất
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(12.0),
-                            child: Image.asset(
-                              item['image']!,
-                              width: 100,
-                              height: 100,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          // Nội dung bài viết đề xuất
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  item['title']!,
-                                  style: const TextStyle(
-                                    fontSize: 16, // Font nhỏ hơn cho bài viết đề xuất
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  item['info']!,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }
+                  ),
+                );
               },
-            ),
-          ),
-        ],
+              child: Card(
+                margin: const EdgeInsets.all(8.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                elevation: 4,
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12.0),
+                      child: Image.asset(
+                        lesson['image']!,
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            lesson['title']!,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            lesson['info']!,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          } else if (index == lessons.length) {
+            // Hiển thị tiêu đề "Các bài học đề xuất"
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: Center(
+                child: Text(
+                  'Các bài học đề xuất',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            );
+          } else {
+            // Hiển thị các bài học đề xuất
+            final suggestedLesson = suggestedLessons[index - lessons.length - 1];
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BHNP(
+                      lesson: suggestedLesson,
+                      allLessons: suggestedLessons, // Truyền toàn bộ danh sách bài học đề xuất
+                    ),
+                  ),
+                );
+              },
+              child: Card(
+                margin: const EdgeInsets.all(8.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                elevation: 4,
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12.0),
+                      child: Image.asset(
+                        suggestedLesson['image']!,
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            suggestedLesson['title']!,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            suggestedLesson['info']!,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+        },
       ),
     );
   }

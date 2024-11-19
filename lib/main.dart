@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: HomeNP(),
+      home: HomePage(),
       initialRoute: AppRouter.main,
       onGenerateRoute: AppRouter.generateRoute,
     );
