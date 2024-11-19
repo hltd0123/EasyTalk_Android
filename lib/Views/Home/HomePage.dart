@@ -85,14 +85,14 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-              const ContainerMenuItem(
+              ContainerMenuItem(
                 menuItems: [
                   MenuItem(
                     icon: Icon(Icons.book, color: Colors.greenAccent),
                     text: 'Bài học',
                     colorArrow: Colors.greenAccent,
                     menuOptions: [
-                      {'icon': Icons.chrome_reader_mode, 'text': 'Ngữ pháp'}, // Icon và text cho tùy chọn 1
+                      {'icon': Icons.chrome_reader_mode, 'text': 'Ngữ pháp', 'onClick': () => Navigator.pushNamed(context, '/nguphap')}, // Icon và text cho tùy chọn 1
                       {'icon': Icons.transcribe_rounded, 'text': 'Phát âm'}, // Icon và text cho tùy chọn 2
                       {'icon': Icons.library_books, 'text': 'FlashCard'}, // Icon và text cho tùy chọn 3
                     ], // Các mục lựa chọn

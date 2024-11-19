@@ -37,9 +37,6 @@ class MainPage extends StatelessWidget {
           // Render trang con dựa trên selectedIndex của provider
           switch (provider.selectedIndex) {
             case 0:
-              return const HomeNP();
-
-            case 2:
               return const HomePage();
             case 3:
               return const AccountDetailPage();
