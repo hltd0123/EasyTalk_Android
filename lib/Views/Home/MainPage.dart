@@ -1,19 +1,18 @@
 import 'package:dacn/Views/Home/AcountDetailPage.dart';
+import 'package:dacn/Views/Home/BaiHocNguPhap.dart';
+import 'package:dacn/Views/Home/FlashCard.dart';
 import 'package:dacn/Views/Home/HomePage.dart';
+import 'package:dacn/Views/Home/LuyenNguPhap.dart';
 import 'package:dacn/Views/Home/MainPageProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-//Điều chỉnh các Page xuất hiện dưới Bottom Nav ở MainPageBottomNavigation
-//Thêm các tham số tương tự home sẽ tự render ra
-
-//Điều chỉnh Page xuất hiện theo Bottom Nav ở MainPage ( dòng 41 -> )
-//Thêm sửa case theo selectedItem index tương ứng
-
-//Màu cũ: Color(0xFF1D1E33)
-
+// Enum cho các trang trong Bottom Navigation
 enum MainPageBottomNavigation {
   home(icon: Icons.home, label: 'Trang chủ', selectedItem: 0),
+  lessons(icon: Icons.edit_road, label: 'Hành trình', selectedItem: 1),
+  account(icon: Icons.text_snippet, label: 'Bài viết', selectedItem: 2),
+  settings(icon: Icons.settings_rounded, label: 'Cài đặt', selectedItem: 3);
 
   final IconData icon;
   final String label;
@@ -35,10 +34,11 @@ class MainPage extends StatelessWidget {
       appBar: _mainPageAppBar(),
       body: Consumer<MainPageProvider>(
         builder: (context, provider, child) {
-          // Render trang HomePage hoặc AccountDetailPage dựa trên trạng thái của provider
+          // Render trang con dựa trên selectedIndex của provider
           switch (provider.selectedIndex) {
             case 0:
               return const HomeNP();
+
             case 2:
               return const HomePage();
             case 3:
@@ -52,12 +52,13 @@ class MainPage extends StatelessWidget {
       bottomNavigationBar: _buildMainPageBottomNavigation(
         initialIndex: context.watch<MainPageProvider>().selectedIndex,
         onTap: (index) {
-          context.read<MainPageProvider>().updateIndex(index); // Cập nhật giá trị index
+          context.read<MainPageProvider>().updateIndex(index); // Cập nhật selectedIndex
         },
       ),
     );
   }
 
+  // BottomNavigationBar cho MainPage
   Widget _buildMainPageBottomNavigation({
     required int initialIndex,
     required ValueChanged<int> onTap,
@@ -77,6 +78,7 @@ class MainPage extends StatelessWidget {
         ),
       ),
       child: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.transparent, // Để gradient có thể hiển thị
         items: MainPageBottomNavigation.values.map((item) {
           bool isSelected = item.selectedItem == initialIndex;
@@ -85,6 +87,7 @@ class MainPage extends StatelessWidget {
               duration: const Duration(milliseconds: 300),
               child: Icon(
                 item.icon,
+                color: isSelected ? Colors.amber : Colors.white,
                 size: isSelected ? 30 : 25, // Thay đổi kích thước của icon khi được chọn
               ),
             ),
@@ -92,12 +95,14 @@ class MainPage extends StatelessWidget {
           );
         }).toList(),
         currentIndex: initialIndex,
+        selectedItemColor: Colors.amber,
         unselectedItemColor: Colors.white,
         onTap: onTap,
       ),
     );
   }
 
+  // AppBar của MainPage
   AppBar _mainPageAppBar() {
     return AppBar(
       backgroundColor: Colors.transparent,
@@ -137,3 +142,17 @@ class MainPage extends StatelessWidget {
     );
   }
 }
+final List<Map<String, String>> lessons = [
+  {
+    'image': 'assets/hutech3.jpg',
+    'title': 'Cấu trúc câu đơn giản',
+    'info': 'Học cách xây dựng câu đơn giản trong tiếng Anh.',
+  },
+  {
+    'image': 'assets/hutech3.jpg',
+    'title': 'Các thì trong tiếng Anh',
+    'info': 'Tìm hiểu về các thì cơ bản trong tiếng Anh.',
+  },
+
+];
+
