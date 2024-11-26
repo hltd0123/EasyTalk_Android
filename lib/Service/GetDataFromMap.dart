@@ -72,8 +72,8 @@ class GetDataFromMap{
     return data['progressPercentage'];
   }
 
-  static List<PronunciationExercises> getPronunciationExercisesList(Map<String, dynamic> data) {
-    return data['pronunciationExercises'];
+  static List<PronunciationExercises>? getPronunciationExercisesList(Map<String, dynamic> data) {
+    return data['PronunciationExercisesList'];
   }
 
   static Stage? getStage(Map<String, dynamic> data) {

@@ -1,9 +1,9 @@
-import 'package:dacn/Views/WidgetBuiding/pronunciation_list.dart';
+import 'package:dacn/Views/WidgetBuiding/PronunciationStudyList.dart';
 import 'package:flutter/material.dart';
 import 'package:dacn/Service/PronunciationService.dart';
 import 'package:dacn/Service/GetDataFromMap.dart';
 import 'package:dacn/Model/Pronunciation.dart';
-import 'package:dacn/Views/WidgetBuiding/custom_search_appbar.dart';
+import 'package:dacn/Views/WidgetBuiding/CustomSearchAppBar.dart';
 
 
 class StudyPagePhatAm extends StatefulWidget {
@@ -38,7 +38,7 @@ class _StudyPagePhatAmState extends State<StudyPagePhatAm> {
       body: CustomScrollView(
         slivers: [
           const CustomSearchAppBar(hintText: 'Tìm kiếm...'),
-          PronunciationList(pronunciationList: _pronunciationList),
+          PronunciationStudyList(pronunciationList: _pronunciationList),
         ],
       ),
     );

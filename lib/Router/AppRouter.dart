@@ -26,6 +26,7 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => AccountDetailPage());
       case phatam:
         return MaterialPageRoute(builder: (_) => MainPagePhatAm());
+
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

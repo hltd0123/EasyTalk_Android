@@ -1,13 +1,17 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:dacn/Model/Page.dart';
 import 'package:dacn/Model/TranscriptionResponse.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_sound/flutter_sound.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Model/PronunciationExercises.dart';
 
 class PronunciationExercisesService {
   static String domain = dotenv.env['domain']!;
+  static final FlutterSoundRecorder _recorder = FlutterSoundRecorder();
 
   static Future<Map<String, dynamic>> getPronunciationExercises({
     int page = 1,
@@ -60,17 +64,40 @@ class PronunciationExercisesService {
     }
   }
 
-  /*static Future<double?> analyzePronunciationExercise(String exerciseId, int index, Blob audioBlob) async {
+  static Function? stopRecordingCallback;
+  static Future<String> recordAudio({Function? stopCallback}) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final filePath = '${directory.path}/recording.wav';
+
+    // Lưu callback vào biến static
+    stopRecordingCallback = stopCallback;
+
+    // Khởi tạo recorder và bắt đầu ghi âm
+    await _recorder.openRecorder();
+    await _recorder.startRecorder(
+      toFile: filePath,
+      codec: Codec.pcm16WAV,
+    );
+
+    return filePath;
+  }
+
+  // Hàm dừng ghi âm (gọi callback để dừng)
+  static Future<void> stopRecording() async {
+    // Dừng ghi âm
+    await _recorder.stopRecorder();
+    await _recorder.closeRecorder();
+
+    // Gọi callback nếu đã được set
+    stopRecordingCallback?.call();
+  }
+
+
+  static Future<TranscriptionResponse> analyzePronunciationExercise(String exerciseId,int questionNumber, String filePathRecord) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
-    if (token == null) {
-      throw Exception('Token không được null');
-    }
-
-    // Tạo FormData
-    final formData = FormData();
-    formData.append('audio', audioBlob, 'recording.wav');
+    assert(token != null, 'Token ko dc null');
 
     // Tạo request headers
     final headers = {
@@ -78,11 +105,13 @@ class PronunciationExercisesService {
       'Content-Type': 'multipart/form-data',
     };
 
-    // Gửi request POST
-    final uri = Uri.parse('/pronunciation-exercise/analyze/$exerciseId/$index');
+    // Tạo URI cho request
+    final uri = Uri.parse('$domain/pronunciation-exercise/analyze/$exerciseId/${questionNumber.toString()}');
+
+    // Tạo MultipartRequest và thêm file vào request
     final request = http.MultipartRequest('POST', uri)
       ..headers.addAll(headers)
-      ..files.add(http.MultipartFile.fromBytes('audio', await audioBlob.arrayBuffer(), filename: 'recording.wav'));
+      ..files.add(await http.MultipartFile.fromPath('audio', filePathRecord, filename: 'recording.wav'));
 
     try {
       final response = await request.send();
@@ -92,14 +121,13 @@ class PronunciationExercisesService {
         final jsonData = json.decode(responseData);
 
         // Phân tích kết quả response và trả về accuracy
-        final transcriptionResponse = TranscriptionResponse.fromJson(jsonData);
-        return transcriptionResponse.accuracy;  // Trả về điểm (accuracy)
+        return TranscriptionResponse.fromJson(jsonData);
       } else {
         throw Exception('Không thể phân tích âm thanh');
       }
     } catch (e) {
       rethrow;
     }
-  }*/
+  }
 
 }

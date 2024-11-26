@@ -1,11 +1,12 @@
 import 'package:dacn/Views/Home/MainPageProvider.dart';
+import 'package:dacn/Views/PhatAm/ExerciseListPagePhatAm.dart';
 import 'package:dacn/Views/PhatAm/StudyPagePhatAm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 enum MainPagePhatAmBottomNavigation {
-  study(icon: Icons.book, label: 'Bài học', selectedItem: 11),
-  lessons(icon: Icons.edit, label: 'Luyện tập', selectedItem: 12);
+  study(icon: Icons.book, label: 'Bài học', selectedItem: 0),
+  lessons(icon: Icons.edit, label: 'Luyện tập', selectedItem: 1);
 
   final IconData icon;
   final String label;
@@ -27,9 +28,11 @@ class MainPagePhatAm extends StatelessWidget {
       appBar: _mainPageAppBar(),
       body: Consumer<MainPageProvider>(
         builder: (context, provider, child) {
+          print(provider.selectedIndex);
           // Render trang HomePage hoặc AccountDetailPage dựa trên trạng thái của provider
           switch (provider.selectedIndex) {
             case 0: return const StudyPagePhatAm();
+            case 1: return const ExerciseListPagePhatAm();
             default: return const StudyPagePhatAm();
           }
         },
@@ -87,6 +90,7 @@ class MainPagePhatAm extends StatelessWidget {
 
   AppBar _mainPageAppBar() {
     return AppBar(
+      automaticallyImplyLeading: false,
       backgroundColor: Colors.transparent,
       elevation: 0,
       leading: const Icon(Icons.shield, color: Colors.white),
