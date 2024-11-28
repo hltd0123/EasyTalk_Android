@@ -20,21 +20,34 @@ class PronunciationExercisesProvider with ChangeNotifier {
   PronunciationExercisesQuestion get currentQuestion => questions[_currentIndex];
   int get currentIndex => _currentIndex;
   bool get hasNext => _currentIndex < questions.length - 1;
+  bool get hasPrevious => _currentIndex > 0;
   String? get selectedOption => _selectedOption;
   bool? get answerChecked => _answerChecked;
   bool get recording => _recording;
+  String talkResult = '';
 
   void nextQuestion() {
     if (hasNext) {
-      answer = '';
-      filePathRecord = '';
-      sending = false;
       _currentIndex++;
       _resetState();
-      notifyListeners();
     }
   }
 
+  void _resetState() {
+    _selectedOption = null;
+    _answerChecked = null;
+    _recording = false;
+    talkResult = '';
+    answer = '';
+    filePathRecord = '';
+    sending = false;
+    notifyListeners();
+  }
+
+  void previousQuestion(){
+    _currentIndex--;
+    _resetState();
+  }
   void skipQuestion() => nextQuestion();
 
   void selectOption(String option) {
@@ -83,6 +96,7 @@ class PronunciationExercisesProvider with ChangeNotifier {
     answer = ans.detailedResult
         .map((ansPer) => ansPer.correct ? 'T' : 'F')
         .join();
+    talkResult = ans.transcription;
     sending = false;
     notifyListeners(); // Thông báo trạng thái dừng ghi âm
   }
@@ -90,11 +104,5 @@ class PronunciationExercisesProvider with ChangeNotifier {
   void stopRecordingCallbackFunction() {
     stopRecording();
     print('Recording stopped and analyzed');
-  }
-
-  void _resetState() {
-    _selectedOption = null;
-    _answerChecked = null;
-    _recording = false;
   }
 }

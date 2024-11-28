@@ -19,28 +19,85 @@ class PronunciationExercisesPage extends StatelessWidget {
           final question = provider.currentQuestion;
 
           return Scaffold(
-            appBar: AppBar(title: const Text("Luyện tập nghe và phát âm")),
-            body: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    "Question ${provider.currentIndex + 1}/${provider.questions.length}",
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            appBar: AppBar(
+              title: const Text("Bài tập phát âm"),
+              backgroundColor: Colors.blue.shade700,
+              centerTitle: true,
+              automaticallyImplyLeading: false,
+              leading: IconButton(
+                onPressed: provider.hasPrevious
+                    ? provider.previousQuestion
+                    : () => Navigator.of(context).pop(),
+                icon: Icon(
+                    Icons.arrow_back, // Biểu tượng "next"
+                    color: Colors.black // Màu của biểu tượng
+                ),
+                iconSize: 30, // Kích thước biểu tượng
+              ),
+              actions: [
+                IconButton(
+                  onPressed: provider.hasNext
+                      ? provider.skipQuestion
+                      : () => Navigator.of(context).pop(),
+                  icon: Icon(
+                    Icons.arrow_forward, // Biểu tượng "next"
+                    color: Colors.black // Màu của biểu tượng
                   ),
-                  const SizedBox(height: 20),
-                  if (question.type == "multiple-choice")
-                    _buildMultipleChoice(context, question, provider),
-                  if (question.type == "pronunciation")
-                    _buildPronunciation(context, question, provider),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    //Chuyển trang sau khi xong ở đây
-                    onPressed: provider.hasNext ? provider.skipQuestion : Navigator.of(context).pop,
-                    child: provider.hasNext ? const Text("Skip") : const Text("Kết thúc kiểm tra"),
-                  ),
-                ],
+                  iconSize: 30, // Kích thước biểu tượng
+                )
+              ],
+            ),
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 10),
+                    Text(
+                      question.question ?? '',
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+                    if (question.type == "multiple-choice")
+                      _buildMultipleChoice(context, question, provider),
+                    if (question.type == "pronunciation")
+                      _buildPronunciation(context, question, provider),
+                    const SizedBox(height: 20),
+                    if (question.type == "pronunciation")
+                      _buildCard(provider.talkResult),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        provider.questions.length,
+                            (index) => Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: provider.currentIndex == index
+                                ? Colors.blue
+                                : Colors.grey.shade300,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: Text(
+                              "${index + 1}",
+                              style: TextStyle(
+                                color: provider.currentIndex == index
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                ),
               ),
             ),
           );
@@ -52,8 +109,7 @@ class PronunciationExercisesPage extends StatelessWidget {
   Widget _buildMultipleChoice(
       BuildContext context,
       PronunciationExercisesQuestion question,
-      PronunciationExercisesProvider provider,
-      ){
+      PronunciationExercisesProvider provider) {
     FlutterTts flutterTts = FlutterTts();
 
     return Column(
@@ -91,12 +147,11 @@ class PronunciationExercisesPage extends StatelessWidget {
   Widget _buildPronunciation(
       BuildContext context,
       PronunciationExercisesQuestion question,
-      PronunciationExercisesProvider provider,
-      ) {
+      PronunciationExercisesProvider provider) {
     var questionShow = question.question ?? '';
     var lengthCheck = questionShow
-        .replaceAll(',', '')  // Loại bỏ dấu phẩy
-        .replaceAll('?', '')
+        .replaceAll(',', ' ')
+        .replaceAll('?', ' ')
         .replaceAll(RegExp(r'\s+'), ' ')
         .trim()
         .split(' ')
@@ -110,7 +165,7 @@ class PronunciationExercisesPage extends StatelessWidget {
           style: TextStyle(fontSize: 18),
         ),
         const SizedBox(height: 10),
-        if(provider.answer == '')
+        if (provider.answer == '')
           Center(
             child: Text(
               questionShow,
@@ -120,10 +175,7 @@ class PronunciationExercisesPage extends StatelessWidget {
         else
           Center(
             child: Row(
-              children: [
-                // Tạo danh sách các widget Text trước khi thêm vào Row
-                ..._buildTextWidgets(lengthCheck, questionShow, provider.answer),
-              ],
+              children: _buildTextWidgets(lengthCheck, questionShow, provider.answer),
             ),
           ),
         const SizedBox(height: 20),
@@ -147,6 +199,29 @@ class PronunciationExercisesPage extends StatelessWidget {
           child: const Text("Dừng ghi âm và kiểm tra"),
         ),
       ],
+    );
+  }
+
+  Widget _buildCard(String rs) {
+    return Card(
+      elevation: 5,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Text(
+              rs == '' ? 'Nơi hiện kết quả nói' :'Bạn đã nói',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              rs == '' ? 'Chúc may mắn' : rs,
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -184,8 +259,7 @@ class PronunciationExercisesPage extends StatelessWidget {
                     color: Colors.green),
               ),
             );
-          }
-          else {
+          } else {
             textWidgets.add(
               Text(
                 '${showChar[i]} ',
