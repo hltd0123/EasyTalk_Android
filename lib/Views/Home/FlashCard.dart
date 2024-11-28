@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dacn/Views/Home/FlashCardDetail.dart';
 
 class FlashCard extends StatefulWidget {
   const FlashCard({super.key});
@@ -8,77 +9,62 @@ class FlashCard extends StatefulWidget {
 }
 
 class _FlashCardState extends State<FlashCard> {
-  // Danh sách flashcard
   final List<Map<String, String>> _flashCards = [];
 
   void _addFlashCard() {
-    // Hàm thêm flashcard mới
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        String title = ''; // Tiêu đề
-        String content = ''; // Nội dung
+        String title = '';
+        String content = '';
+
         return AlertDialog(
           title: const Text('Tạo FlashCard'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start, // Để căn trái các phần tử
-            children: [
-              // Tiêu đề cho trường Tiêu đề
-              const Text(
-                'Tiêu đề:',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold, // In đậm
-                  fontSize: 18,  // Cỡ chữ lớn hơn
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Tiêu đề:',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
-              ),
-              const SizedBox(height: 10),  // Khoảng cách giữa Tiêu đề và trường nhập liệu
-              // Khung nhập liệu Tiêu đề
-              TextField(
-                onChanged: (value) {
-                  title = value;  // Cập nhật Tiêu đề
-                },
-                decoration: const InputDecoration(
+                const SizedBox(height: 10),
+                TextField(
+                  onChanged: (value) => title = value,
+                  decoration: const InputDecoration(),
+                  style: const TextStyle(fontSize: 18),
                 ),
-                style: const TextStyle(fontSize: 18), // Tăng kích thước chữ cho Tiêu đề
-              ),
-              const SizedBox(height: 20), // Khoảng cách giữa các phần
-              // Tiêu đề cho trường Nội dung
-              const Text(
-                'Nội dung:',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold, // In đậm
-                  fontSize: 18,  // Cỡ chữ lớn hơn
+                const SizedBox(height: 20),
+                const Text(
+                  'Nội dung:',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
-              ),
-              const SizedBox(height: 10),  // Khoảng cách giữa Tiêu đề và trường nhập liệu
-              // Khung nhập liệu Nội dung
-              TextField(
-                onChanged: (value) {
-                  content = value;  // Cập nhật Nội dung
-                },
-                decoration: const InputDecoration(
+                const SizedBox(height: 10),
+                TextField(
+                  onChanged: (value) => content = value,
+                  decoration: const InputDecoration(),
+                  style: const TextStyle(fontSize: 18),
+                  maxLines: 3,
                 ),
-                style: const TextStyle(fontSize: 18), // Tăng kích thước chữ cho Nội dung
-                maxLines: 5,  // Cho phép người dùng nhập nhiều dòng
-                minLines: 3,  // Giới hạn tối thiểu là 3 dòng
-              ),
-            ],
+              ],
+            ),
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();  // Đóng hộp thoại
-              },
+              onPressed: () => Navigator.of(context).pop(),
               child: const Text('Hủy'),
             ),
             TextButton(
               onPressed: () {
                 if (title.isNotEmpty && content.isNotEmpty) {
                   setState(() {
-                    _flashCards.add({'front': title, 'back': content});
+                    _flashCards.add({
+                      'title': title,
+                      'content': content,
+                    });
                   });
-                  Navigator.of(context).pop();  // Đóng hộp thoại sau khi thêm flashcard
+                  Navigator.of(context).pop();
                 }
               },
               child: const Text('Thêm'),
@@ -89,37 +75,51 @@ class _FlashCardState extends State<FlashCard> {
     );
   }
 
+  void _openDetailScreen(Map<String, String> flashCard) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FlashCardDetail(flashCard: flashCard),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Flash Cards',  // Tiêu đề trên AppBar
+          'Flash Cards',
           style: TextStyle(
             color: Colors.black,
-            fontWeight: FontWeight.bold, // Tô đậm tiêu đề
-            fontSize: 24,  // Cỡ chữ lớn hơn
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
           ),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context); // Quay lại trang trước
-          },
+          onPressed: () => Navigator.pop(context),
         ),
+        actions: _flashCards.isNotEmpty
+            ? [
+          IconButton(
+            icon: const Icon(Icons.add, color: Colors.black),
+            onPressed: _addFlashCard,
+          ),
+        ]
+            : null,
       ),
       body: SafeArea(
         child: Column(
           children: [
-            // Tiêu đề dưới AppBar
             Padding(
               padding: const EdgeInsets.only(top: 16.0),
               child: Text(
                 _flashCards.isEmpty
-                    ? 'Bạn chưa tạo FlashCard nào'  // Tiêu đề dưới AppBar khi chưa có flashcards
-                    : 'Danh sách FlashCards',  // Tiêu đề khi có flashcards
+                    ? 'Bạn chưa tạo FlashCard nào'
+                    : 'Danh sách FlashCards',
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -127,8 +127,7 @@ class _FlashCardState extends State<FlashCard> {
                 ),
               ),
             ),
-            const SizedBox(height: 20), // Khoảng cách dưới tiêu đề
-            // Nội dung chính
+            const SizedBox(height: 20),
             Expanded(
               child: _flashCards.isEmpty
                   ? Center(
@@ -161,13 +160,22 @@ class _FlashCardState extends State<FlashCard> {
                     margin: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 8),
                     child: ListTile(
-                      title: Text(flashCard['front']!),
-                      subtitle: Text(flashCard['back']!),
+                      title: Text(flashCard['title']!),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Nội dung: ${flashCard['content']}'),
+                          Text(
+                            'Số từ vựng: 0', // Số từ vựng mặc định là 0
+                          ),
+                        ],
+                      ),
+                      onTap: () => _openDetailScreen(flashCard),
                       trailing: IconButton(
                         icon: const Icon(Icons.delete, color: Colors.red),
                         onPressed: () {
                           setState(() {
-                            _flashCards.removeAt(index); // Xóa FlashCard
+                            _flashCards.removeAt(index);
                           });
                         },
                       ),
@@ -180,9 +188,10 @@ class _FlashCardState extends State<FlashCard> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addFlashCard,  // Khi nhấn vào sẽ hiển thị hộp thoại để thêm flashcard
+        onPressed: _addFlashCard,
         child: const Icon(Icons.add),
       ),
     );
   }
 }
+

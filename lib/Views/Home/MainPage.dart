@@ -1,5 +1,6 @@
 import 'package:dacn/Views/Home/AcountDetailPage.dart';
 import 'package:dacn/Views/Home/BaiHocNguPhap.dart';
+import 'package:dacn/Views/Home/BaiTapNguPhap.dart';
 import 'package:dacn/Views/Home/FlashCard.dart';
 import 'package:dacn/Views/Home/HomePage.dart';
 import 'package:dacn/Views/Home/LuyenNguPhap.dart';
@@ -37,7 +38,7 @@ class MainPage extends StatelessWidget {
           // Render trang con dựa trên selectedIndex của provider
           switch (provider.selectedIndex) {
             case 0:
-              return const HomePage();
+              return const BaiTapNguPhap();
             case 3:
               return const AccountDetailPage();
 

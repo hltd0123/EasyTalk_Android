@@ -25,14 +25,33 @@ class MainPagePhatAm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _mainPageAppBar(),
-      body: Consumer<MainPageProvider>(
-        builder: (context, provider, child) {
-          // Render trang HomePage hoặc AccountDetailPage dựa trên trạng thái của provider
-          switch (provider.selectedIndex) {
-            case 0: return const StudyPagePhatAm();
-            default: return const StudyPagePhatAm();
-          }
-        },
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: const Text(
+              'Bài học phát âm',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          // Các nội dung khác của trang
+          Expanded(
+            child: Consumer<MainPageProvider>(
+              builder: (context, provider, child) {
+                // Render trang HomePage hoặc AccountDetailPage dựa trên trạng thái của provider
+                switch (provider.selectedIndex) {
+                  case 0:
+                    return const StudyPagePhatAm();
+                  default:
+                    return const StudyPagePhatAm();
+                }
+              },
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: _buildMainPageBottomNavigation(
         initialIndex: context.watch<MainPageProvider>().selectedIndex,
@@ -90,12 +109,7 @@ class MainPagePhatAm extends StatelessWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
       leading: const Icon(Icons.shield, color: Colors.white),
-      title: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Nội dung cho tiêu đề nếu cần
-        ],
-      ),
+      title: const SizedBox.shrink(),  // Ẩn tiêu đề của AppBar
       flexibleSpace: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
