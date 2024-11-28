@@ -5,13 +5,15 @@ class MenuItem extends StatefulWidget {
   final String text;
   final Color colorArrow;
   final List<Map<String, dynamic>>? menuOptions; // menuOptions có thể null
+  final Function? onClickWithoutMenuOption;
 
   const MenuItem({
     super.key,
     required this.icon,
     required this.text,
     required this.colorArrow,
-    this.menuOptions, // menuOptions có thể null
+    this.menuOptions,
+    this.onClickWithoutMenuOption
   });
 
   @override
@@ -34,7 +36,9 @@ class _MenuItemState extends State<MenuItem> {
                 _isExpanded = !_isExpanded; // Đảo ngược trạng thái mở/đóng menu
               });
             }
-                : null, // Nếu không có menuOptions, không cho phép mở/đóng menu
+                : () {
+                  widget.onClickWithoutMenuOption?.call(); // Gọi hàm nếu tồn tại
+                },
             child: FractionallySizedBox(
               alignment: Alignment.centerLeft,
               widthFactor: 1,

@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 class AiChatService{
   static String domain = dotenv.env['domain']!;
 
-  static Future<String> sendingChatAndGetResoine(String mess) async {
+  static Future<String> sendingChatAndGetResponse(String mess) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 

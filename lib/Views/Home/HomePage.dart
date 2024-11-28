@@ -111,6 +111,9 @@ class _HomePageState extends State<HomePage> {
                     icon: Icon(Icons.chat , color: Colors.yellowAccent),
                     text: 'Chat AI',
                     colorArrow: Colors.blue,
+                    onClickWithoutMenuOption: () {
+                      Navigator.pushNamed(context, '/aichat');
+                    },
                   ),
                   MenuItem(
                     icon: Icon(Icons.layers , color: Colors.deepOrange),
