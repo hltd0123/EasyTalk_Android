@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'CuaVaChang.dart'; // Import màn hình mới
+import 'BangXepHang.dart'; // Import màn hình Bảng Xếp Hạng
 
 class HanhTrinh extends StatelessWidget {
   const HanhTrinh({super.key});
@@ -23,6 +24,25 @@ class HanhTrinh extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
+        actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.menu, color: Colors.black), // Icon ba gạch ngang
+            onSelected: (value) {
+              if (value == 'BangXepHang') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const BangXepHang()),
+                );
+              }
+            },
+            itemBuilder: (BuildContext context) => [
+              const PopupMenuItem<String>(
+                value: 'BangXepHang',
+                child: Text('Bảng Xếp Hạng'),
+              ),
+            ],
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -31,9 +51,9 @@ class HanhTrinh extends StatelessWidget {
             child: Text(
               'Cửa và Chặng',
               style: TextStyle(
-                fontSize: 24, // Kích thước chữ giống AppBar
-                fontWeight: FontWeight.bold, // In đậm giống AppBar
-                color: Colors.black, // Màu đen giống AppBar
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
           ),
@@ -42,11 +62,11 @@ class HanhTrinh extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               children: [
-                _buildSquareTile('Luyện tập sơ cấp', 60, context), // Ví dụ với 60% hoàn thành
+                _buildSquareTile('Luyện tập sơ cấp', 60, context),
                 const SizedBox(height: 10),
-                _buildSquareTile('Luyện tập trung cấp', 40, context), // Ví dụ với 40% hoàn thành
+                _buildSquareTile('Luyện tập trung cấp', 40, context),
                 const SizedBox(height: 10),
-                _buildSquareTile('Luyện tập cao cấp', 80, context), // Ví dụ với 80% hoàn thành
+                _buildSquareTile('Luyện tập cao cấp', 80, context),
               ],
             ),
           ),
@@ -58,7 +78,6 @@ class HanhTrinh extends StatelessWidget {
   Widget _buildSquareTile(String title, double progress, BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Khi nhấn vào một bài luyện tập, chuyển đến màn hình Cửa và Chặng
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -67,22 +86,22 @@ class HanhTrinh extends StatelessWidget {
         );
       },
       child: Container(
-        height: 140, // Giảm chiều cao khung vuông
-        width: 120,  // Giảm chiều rộng khung vuông
+        height: 140,
+        width: 120,
         decoration: BoxDecoration(
-          color: Colors.grey.shade300, // Màu nền xám nhạt
-          borderRadius: BorderRadius.circular(12), // Bo góc nhẹ
+          color: Colors.grey.shade300,
+          borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.3),
               spreadRadius: 2,
               blurRadius: 5,
-              offset: const Offset(0, 3), // Đổ bóng nhẹ
+              offset: const Offset(0, 3),
             ),
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.all(8.0), // Padding cho toàn bộ khung
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -90,7 +109,7 @@ class HanhTrinh extends StatelessWidget {
               Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 22, // Giảm kích thước font so với tiêu đề AppBar (24px -> 22px)
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
@@ -99,21 +118,19 @@ class HanhTrinh extends StatelessWidget {
               Column(
                 children: [
                   const SizedBox(height: 8),
-                  // Container bao quanh LinearProgressIndicator để điều chỉnh chiều rộng
                   Container(
-                    width: 120, // Đặt chiều rộng thanh tiến trình bằng chiều rộng khung
+                    width: 120,
                     child: LinearProgressIndicator(
-                      value: progress / 100, // Tính tiến độ từ phần trăm
+                      value: progress / 100,
                       backgroundColor: Colors.grey.shade400,
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
                     ),
                   ),
                   const SizedBox(height: 8),
-                  // Phần trăm hoàn thành
                   Text(
                     '${progress.toStringAsFixed(0)}% hoàn thành',
                     style: const TextStyle(
-                      fontSize: 20, // Giảm kích thước font so với tiêu đề (24px -> 20px)
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),

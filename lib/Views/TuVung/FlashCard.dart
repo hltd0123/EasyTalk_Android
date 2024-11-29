@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dacn/Views/Home/FlashCardDetail.dart';
+import 'package:dacn/Views/TuVung/FlashCardDetail.dart';
 
 class FlashCard extends StatefulWidget {
   const FlashCard({super.key});

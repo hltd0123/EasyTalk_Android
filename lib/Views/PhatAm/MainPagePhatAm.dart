@@ -1,5 +1,6 @@
 import 'package:dacn/Views/Home/MainPageProvider.dart';
 import 'package:dacn/Views/PhatAm/ExerciseListPagePhatAm.dart';
+import 'package:dacn/Views/PhatAm/MainPagePhatAmProvider.dart';
 import 'package:dacn/Views/PhatAm/StudyPagePhatAm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,30 +21,39 @@ enum MainPagePhatAmBottomNavigation {
 }
 
 class MainPagePhatAm extends StatelessWidget {
-  const MainPagePhatAm({super.key});
+  const MainPagePhatAm({super.key, this.initPage = 0});
+  final int initPage;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _mainPageAppBar(),
-      body: Consumer<MainPageProvider>(
+    return ChangeNotifierProvider(
+      create: (_) => MainPagePhatAmProvider()..updateIndex(initPage), // Khởi tạo provider và set giá trị ban đầu
+      child: Consumer<MainPagePhatAmProvider>(
         builder: (context, provider, child) {
-          print(provider.selectedIndex);
-          // Render trang HomePage hoặc AccountDetailPage dựa trên trạng thái của provider
-          switch (provider.selectedIndex) {
-            case 0: return const StudyPagePhatAm();
-            case 1: return const ExerciseListPagePhatAm();
-            default: return const StudyPagePhatAm();
-          }
-        },
-      ),
-      bottomNavigationBar: _buildMainPageBottomNavigation(
-        initialIndex: context.watch<MainPageProvider>().selectedIndex,
-        onTap: (index) {
-          context.read<MainPageProvider>().updateIndex(index); // Cập nhật giá trị index
+          return Scaffold(
+            appBar: _mainPageAppBar(),
+            body: _buildBody(provider.selectedIndex),
+            bottomNavigationBar: _buildMainPageBottomNavigation(
+              initialIndex: provider.selectedIndex,
+              onTap: (index) {
+                provider.updateIndex(index);
+              },
+            ),
+          );
         },
       ),
     );
+  }
+
+  Widget _buildBody(int selectedIndex) {
+    switch (selectedIndex) {
+      case 0:
+        return const StudyPagePhatAm();
+      case 1:
+        return const ExerciseListPagePhatAm();
+      default:
+        return const StudyPagePhatAm();
+    }
   }
 
   Widget _buildMainPageBottomNavigation({

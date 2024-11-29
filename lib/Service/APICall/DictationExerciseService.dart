@@ -21,7 +21,7 @@ class DictationExerciseService {
         'dictationExercises': (data['dictationExercises'] as List)
             .map((dictationJson) => DictationExercise.fromJson(dictationJson))
             .toList(),
-        'page': Page.fromJson({
+        'page': PageModel.fromJson({
           'currentPage': data['currentPage'],
           'totalPages': data['totalPages'],
         })

@@ -37,7 +37,7 @@ class GrammarExerciseService {
       final exercises = (data['data'] as List)
           .map((json) => GrammarExercise.fromJson(json))
           .toList();
-      final page = Page.fromJson(data);
+      final page = PageModel.fromJson(data);
 
       return {
         'grammarExercises': exercises,

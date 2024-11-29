@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:dacn/Views/Home/Reminder.dart';
+import 'package:dacn/Views/NhacNho/Reminder.dart';
+import 'package:dacn/Views/ThongTinTaiKhoang/AccountInfoPage.dart';
 import 'dart:io';
 
 
@@ -87,9 +88,22 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
                 text: 'Thông tin tài khoản',
                 borderColor: Colors.blue,
                 onTap: () {
-                  // Chuyển sang trang thông tin tài khoản
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AccountInfoPage(
+                        userName: 'Nguyen Van A',
+                        lessonsRead: 12,
+                        exercisesCompleted: 20,
+                        doorsPassed: 5,
+                        stagesCleared: 3,
+                        totalPoints: 1500,
+                      ),
+                    ),
+                  );
                 },
               ),
+
               const SizedBox(height: 8.0),
               MenuItem(
                 icon: const Icon(Icons.notifications, color: Colors.white),

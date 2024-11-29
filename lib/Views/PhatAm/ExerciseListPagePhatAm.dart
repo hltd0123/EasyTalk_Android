@@ -1,6 +1,6 @@
 import 'package:dacn/Model/PronunciationExercises.dart';
-import 'package:dacn/Service/GetDataFromMap.dart';
-import 'package:dacn/Service/PronunciationExercisesService.dart';
+import 'package:dacn/Service/APICall/PronunciationExercisesService.dart';
+import 'package:dacn/Service/Local/GetDataFromMap.dart';
 import 'package:dacn/Views/WidgetBuiding/CustomSearchAppBar.dart';
 import 'package:dacn/Views/WidgetBuiding/PronunciationExcerciseListGenerate.dart';
 import 'package:flutter/material.dart';

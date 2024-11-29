@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:dacn/Service/GetDataFromMap.dart';
+import 'package:dacn/Service/Local/GetDataFromMap.dart';
 import 'package:dacn/Model/Pronunciation.dart';
-import 'package:dacn/Service/PronunciationService.dart';
 
 class PronunciationStudyList extends StatelessWidget {
   final Future<List<Pronunciation>> pronunciationList;

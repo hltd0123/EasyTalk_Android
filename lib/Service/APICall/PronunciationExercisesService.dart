@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:dacn/Model/Page.dart';
+import 'package:dacn/Model/PronunciationExercises.dart';
 import 'package:dacn/Model/TranscriptionResponse.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../Model/PronunciationExercises.dart';
 
 class PronunciationExercisesService {
   static String domain = dotenv.env['domain']!;
@@ -32,7 +32,7 @@ class PronunciationExercisesService {
 
       return {
         'PronunciationExercisesList': List<PronunciationExercises>.from(data['data'].map((x) => PronunciationExercises.fromJson(x)),),
-        'page': Page(
+        'page': PageModel(
           totalPages: data['totalPages'],
           currentPage: data['currentPage'],
         ),

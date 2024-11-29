@@ -9,7 +9,7 @@ class GrammarService {
 
   static Future<Map<String, dynamic>?> getGrammarListOnPageAndLimit({int page = 1, int limit = 2}) async {
     final response = await http.get(
-      Uri.parse('$domain/grammar-exercise/api/grammars?page=$page&limit=$limit'),
+      Uri.parse('$domain/grammar/api/grammar-list?page=$page&limit=$limit'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -23,19 +23,20 @@ class GrammarService {
         'grammars': (data['grammars'] as List)
             .map((grammarJson) => Grammar.fromJson(grammarJson))
             .toList(),
-        'page': Page.fromJson({
+        'page': PageModel.fromJson({
           'currentPage': data['currentPage'],
           'totalPages': data['totalPages'],
         }),
       };
     } else {
+      print(response.statusCode);
       return null;
     }
   }
 
   static Future<Grammar?> getGrammarOnId(String grammarId) async {
     final response = await http.get(
-      Uri.parse('$domain/grammar-exercise/api/$grammarId'),
+      Uri.parse('$domain/grammar/api/$grammarId'),
       headers: {
         'Content-Type': 'application/json',
       },

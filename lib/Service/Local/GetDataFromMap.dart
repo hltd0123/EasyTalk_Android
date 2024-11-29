@@ -20,7 +20,7 @@ class GetDataFromMap{
     return data['flashCardLists'];
   }
 
-  static Page? getPage(Map<String, dynamic> data) {
+  static PageModel? getPage(Map<String, dynamic> data) {
     return data['page'];
   }
 

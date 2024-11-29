@@ -36,7 +36,7 @@ class PronunciationService {
       final data = json.decode(response.body);
       return {
         'pronunciations': List<Pronunciation>.from(data['pronunciations'].map((x) => Pronunciation.fromJson(x))),
-        'page': Page(
+        'page': PageModel(
           totalPages: data['totalPages'],
           currentPage: data['currentPage'],
         ),

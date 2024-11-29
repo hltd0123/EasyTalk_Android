@@ -1,7 +1,7 @@
+import 'package:dacn/Service/APICall/PronunciationService.dart';
 import 'package:dacn/Views/WidgetBuiding/PronunciationStudyList.dart';
 import 'package:flutter/material.dart';
-import 'package:dacn/Service/PronunciationService.dart';
-import 'package:dacn/Service/GetDataFromMap.dart';
+import 'package:dacn/Service/Local/GetDataFromMap.dart';
 import 'package:dacn/Model/Pronunciation.dart';
 import 'package:dacn/Views/WidgetBuiding/CustomSearchAppBar.dart';
 

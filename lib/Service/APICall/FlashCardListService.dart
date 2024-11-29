@@ -104,7 +104,7 @@ class FlashCardListService {
       // Trả về Map chứa danh sách, totalPages, và currentPage
       return {
         'flashCardLists': flashCardLists,
-        'page': Page(
+        'page': PageModel(
           totalPages: data['totalPages'],
           currentPage: data['currentPage'],
         ),

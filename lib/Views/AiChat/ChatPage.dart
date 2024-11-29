@@ -1,6 +1,6 @@
 import 'package:dacn/Model/MessageChatting.dart';
-import 'package:dacn/Service/AiChatService.dart';
-import 'package:dacn/Service/SQFLiteService.dart';
+import 'package:dacn/Service/APICall/AiChatService.dart';
+import 'package:dacn/Service/Local/SQFLiteService.dart';
 import 'package:flutter/material.dart';
 
 class ChatPage extends StatefulWidget {
