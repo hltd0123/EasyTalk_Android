@@ -2,6 +2,7 @@ import 'package:dacn/Views/Home/AcountDetailPage.dart';
 import 'package:dacn/Views/Home/BaiHocNguPhap.dart';
 import 'package:dacn/Views/Home/BaiTapNguPhap.dart';
 import 'package:dacn/Views/Home/FlashCard.dart';
+import 'package:dacn/Views/Home/HanhTrinh.dart';
 import 'package:dacn/Views/Home/HomePage.dart';
 import 'package:dacn/Views/Home/LuyenNguPhap.dart';
 import 'package:dacn/Views/Home/MainPageProvider.dart';
@@ -39,6 +40,8 @@ class MainPage extends StatelessWidget {
           switch (provider.selectedIndex) {
             case 0:
               return const BaiTapNguPhap();
+            case 1:
+              return const HanhTrinh();
             case 3:
               return const AccountDetailPage();
 
