@@ -1,9 +1,10 @@
 import 'package:dacn/Views/AiChat/ChatPage.dart';
-import 'package:dacn/Views/Home/AcountDetailPage.dart';
+import 'package:dacn/Views/ThongTinTaiKhoang/AcountDetailPage.dart';
 import 'package:dacn/Views/Home/HomePage.dart';
-import 'package:dacn/Views/Home/LuyenNguPhap.dart';
+import 'package:dacn/Views/NguPhap/LuyenNguPhap.dart';
 import 'package:dacn/Views/Home/MainPage.dart';
 import 'package:dacn/Views/PhatAm/MainPagePhatAm.dart';
+import 'package:dacn/Views/WidgetBuiding/customPageRoute.dart';
 import 'package:flutter/material.dart';
 
 class AppRouter {
@@ -19,18 +20,18 @@ class AppRouter {
   static Route<dynamic>? generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case main:
-        return MaterialPageRoute(builder: (_) => MainPage());
+        return customPageRoute(MainPage());
       case home:
-        return MaterialPageRoute(builder: (_) => HomePage());
+        return customPageRoute(HomePage());
       case nguphap:
-        return MaterialPageRoute(builder: (_) => HomeNP());
+        return customPageRoute(HomeNP());
       case setting:
-        return MaterialPageRoute(builder: (_) => AccountDetailPage());
+        return customPageRoute(AccountDetailPage());
       case phatam:
-        return MaterialPageRoute(builder: (_) => MainPagePhatAm());
+        final int initPage =  settings.arguments is int ? settings.arguments as int : 0;
+        return customPageRoute(MainPagePhatAm(initPage: initPage,));
       case aichat:
-        return MaterialPageRoute(builder: (_) => ChatPage());
-
+        return customPageRoute(ChatPage());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

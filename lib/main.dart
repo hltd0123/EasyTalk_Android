@@ -1,9 +1,5 @@
 import 'package:dacn/Router/AppRouter.dart';
-import 'package:dacn/Views/AiChat/ChatPage.dart';
-import 'package:dacn/Views/Home/LuyenNguPhap.dart';
-import 'package:dacn/Views/Home/MainPage.dart';
 import 'package:dacn/Views/Home/MainPageProvider.dart';
-import 'package:dacn/Views/PhatAm/MainPagePhatAm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -24,41 +20,9 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       initialRoute: AppRouter.main,
-      onGenerateRoute: (settings) {
-        switch (settings.name) {
-          case AppRouter.main:
-            return customPageRoute(const MainPage());
-          case AppRouter.nguphap:
-            return customPageRoute(const HomeNP());
-          case AppRouter.phatam:
-            return customPageRoute(const MainPagePhatAm());
-          case AppRouter.aichat:
-            return customPageRoute(ChatPage());
-        }
-      },
-    );
-  }
-  PageRouteBuilder customPageRoute(Widget page) {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => page,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(0.0, 1.0); // Trượt từ dưới lên
-        const end = Offset.zero;
-        const curve = Curves.easeInOut;
-
-        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-        var offsetAnimation = animation.drive(tween);
-
-        return SlideTransition(
-          position: offsetAnimation,
-          child: FadeTransition(
-            opacity: animation,
-            child: child,
-          ),
-        );
-      },
+      onGenerateRoute: AppRouter.generateRoute
     );
   }
 }

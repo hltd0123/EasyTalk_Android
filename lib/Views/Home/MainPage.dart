@@ -1,10 +1,10 @@
-import 'package:dacn/Views/Home/AcountDetailPage.dart';
-import 'package:dacn/Views/Home/BaiHocNguPhap.dart';
-import 'package:dacn/Views/Home/BaiTapNguPhap.dart';
-import 'package:dacn/Views/Home/FlashCard.dart';
-import 'package:dacn/Views/Home/HanhTrinh.dart';
+import 'package:dacn/Views/ThongTinTaiKhoang/AcountDetailPage.dart';
+import 'package:dacn/Views/NguPhap/BaiHocNguPhap.dart';
+import 'package:dacn/Views/NguPhap/BaiTapNguPhap.dart';
+import 'package:dacn/Views/TuVung/FlashCard.dart';
+import 'package:dacn/Views/HanhTrinh/HanhTrinh.dart';
 import 'package:dacn/Views/Home/HomePage.dart';
-import 'package:dacn/Views/Home/LuyenNguPhap.dart';
+import 'package:dacn/Views/NguPhap/LuyenNguPhap.dart';
 import 'package:dacn/Views/Home/MainPageProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -39,7 +39,7 @@ class MainPage extends StatelessWidget {
           // Render trang con dựa trên selectedIndex của provider
           switch (provider.selectedIndex) {
             case 0:
-              return const BaiTapNguPhap();
+              return const HomePage();
             case 1:
               return const HanhTrinh();
             case 3:

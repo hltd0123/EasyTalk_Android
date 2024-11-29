@@ -23,7 +23,7 @@ class VocabularyExerciseService {
         'vocabularies': (data['data'] as List)
             .map((vocabJson) => Vocabulary.fromJson(vocabJson))
             .toList(),
-        'page': Page.fromJson(
+        'page': PageModel.fromJson(
           {
             'currentPage': data['currentPage'],
             'totalPages': data['totalPages'],

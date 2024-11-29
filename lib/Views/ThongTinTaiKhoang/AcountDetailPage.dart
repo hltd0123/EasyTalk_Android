@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:dacn/Views/Home/Reminder.dart';
+import 'package:dacn/Views/NhacNho/Reminder.dart';
 import 'dart:io';
 
 
