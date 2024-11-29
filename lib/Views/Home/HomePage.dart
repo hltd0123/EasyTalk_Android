@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                     colorArrow: Colors.greenAccent,
                     menuOptions: [
                       {'icon': Icons.chrome_reader_mode, 'text': 'Ngữ pháp', 'onClick': () => Navigator.pushNamed(context, '/nguphap')}, // Icon và text cho tùy chọn 1
-                      {'icon': Icons.transcribe_rounded, 'text': 'Phát âm', 'onClick': () => Navigator.pushReplacementNamed(context, '/phatam')}, // Icon và text cho tùy chọn 2
+                      {'icon': Icons.transcribe_rounded, 'text': 'Phát âm', 'onClick': () => Navigator.pushNamed(context, '/phatam')}, // Icon và text cho tùy chọn 2
                       {'icon': Icons.library_books, 'text': 'FlashCard'}, // Icon và text cho tùy chọn 3
                     ], // Các mục lựa chọn
                   ),
@@ -111,6 +111,9 @@ class _HomePageState extends State<HomePage> {
                     icon: Icon(Icons.chat , color: Colors.yellowAccent),
                     text: 'Chat AI',
                     colorArrow: Colors.blue,
+                    onClickWithoutMenuOption: () {
+                      Navigator.pushNamed(context, '/aichat');
+                    },
                   ),
                   MenuItem(
                     icon: Icon(Icons.layers , color: Colors.deepOrange),

@@ -1,11 +1,12 @@
 import 'package:dacn/Views/Home/MainPageProvider.dart';
+import 'package:dacn/Views/PhatAm/ExerciseListPagePhatAm.dart';
 import 'package:dacn/Views/PhatAm/StudyPagePhatAm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 enum MainPagePhatAmBottomNavigation {
-  study(icon: Icons.book, label: 'Bài học', selectedItem: 11),
-  lessons(icon: Icons.edit, label: 'Luyện tập', selectedItem: 12);
+  study(icon: Icons.book, label: 'Bài học', selectedItem: 0),
+  lessons(icon: Icons.edit, label: 'Luyện tập', selectedItem: 1);
 
   final IconData icon;
   final String label;
@@ -25,33 +26,16 @@ class MainPagePhatAm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _mainPageAppBar(),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 16.0),
-            child: const Text(
-              'Bài học phát âm',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          // Các nội dung khác của trang
-          Expanded(
-            child: Consumer<MainPageProvider>(
-              builder: (context, provider, child) {
-                // Render trang HomePage hoặc AccountDetailPage dựa trên trạng thái của provider
-                switch (provider.selectedIndex) {
-                  case 0:
-                    return const StudyPagePhatAm();
-                  default:
-                    return const StudyPagePhatAm();
-                }
-              },
-            ),
-          ),
-        ],
+      body: Consumer<MainPageProvider>(
+        builder: (context, provider, child) {
+          print(provider.selectedIndex);
+          // Render trang HomePage hoặc AccountDetailPage dựa trên trạng thái của provider
+          switch (provider.selectedIndex) {
+            case 0: return const StudyPagePhatAm();
+            case 1: return const ExerciseListPagePhatAm();
+            default: return const StudyPagePhatAm();
+          }
+        },
       ),
       bottomNavigationBar: _buildMainPageBottomNavigation(
         initialIndex: context.watch<MainPageProvider>().selectedIndex,
@@ -106,10 +90,16 @@ class MainPagePhatAm extends StatelessWidget {
 
   AppBar _mainPageAppBar() {
     return AppBar(
+      automaticallyImplyLeading: false,
       backgroundColor: Colors.transparent,
       elevation: 0,
       leading: const Icon(Icons.shield, color: Colors.white),
-      title: const SizedBox.shrink(),  // Ẩn tiêu đề của AppBar
+      title: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Nội dung cho tiêu đề nếu cần
+        ],
+      ),
       flexibleSpace: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(

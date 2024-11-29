@@ -4,11 +4,10 @@ import 'package:dacn/Service/GetDataFromMap.dart';
 import 'package:dacn/Model/Pronunciation.dart';
 import 'package:dacn/Service/PronunciationService.dart';
 
-class PronunciationList extends StatelessWidget {
+class PronunciationStudyList extends StatelessWidget {
   final Future<List<Pronunciation>> pronunciationList;
 
-  const PronunciationList({Key? key, required this.pronunciationList})
-      : super(key: key);
+  const PronunciationStudyList({super.key, required this.pronunciationList});
 
   @override
   Widget build(BuildContext context) {
