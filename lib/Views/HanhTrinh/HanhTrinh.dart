@@ -1,3 +1,8 @@
+import 'package:dacn/Model/Gate.dart';
+import 'package:dacn/Model/Journey.dart';
+import 'package:dacn/Model/UserProgress.dart';
+import 'package:dacn/Service/APICall/JourneyService.dart';
+import 'package:dacn/Service/Local/GetDataFromMap.dart';
 import 'package:flutter/material.dart';
 import 'CuaVaChang.dart'; // Import màn hình mới
 
@@ -8,6 +13,7 @@ class HanhTrinh extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text(
           'Hành Trình Học Tập',
           style: TextStyle(
@@ -18,112 +24,126 @@ class HanhTrinh extends StatelessWidget {
         ),
         backgroundColor: Colors.white,
         elevation: 0,
-        centerTitle: true, // Căn giữa tiêu đề AppBar
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
+        centerTitle: true,
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 20),
-          const Center(
-            child: Text(
-              'Cửa và Chặng',
-              style: TextStyle(
-                fontSize: 24, // Kích thước chữ giống AppBar
-                fontWeight: FontWeight.bold, // In đậm giống AppBar
-                color: Colors.black, // Màu đen giống AppBar
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: JourneyService.getJourneyList(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No data available'));
+          }
+
+          final data = snapshot.data!;
+          final journeyList = GetDataFromMap.getJourneyList(data)!;
+
+          return Column(
+            children: [
+              const SizedBox(height: 20),
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  itemCount: journeyList.length,
+                  itemBuilder: (context, index) {
+                    final item = journeyList[index];
+                    return Column(
+                      children: [
+                        _buildSquareTile(
+                            title: item.title,
+                            progress: item.progressPercentage.toDouble(),
+                            context: context,
+                            journeyId: item.id),
+                        const SizedBox(height: 10),
+                      ],
+                    );
+                  },
+                ),
               ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              children: [
-                _buildSquareTile('Luyện tập sơ cấp', 60, context), // Ví dụ với 60% hoàn thành
-                const SizedBox(height: 10),
-                _buildSquareTile('Luyện tập trung cấp', 40, context), // Ví dụ với 40% hoàn thành
-                const SizedBox(height: 10),
-                _buildSquareTile('Luyện tập cao cấp', 80, context), // Ví dụ với 80% hoàn thành
-              ],
-            ),
-          ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }
 
-  Widget _buildSquareTile(String title, double progress, BuildContext context) {
+  Widget _buildSquareTile(
+      { required String title,
+        required double progress,
+        required BuildContext context,
+        required String journeyId}) {
+
     return GestureDetector(
-      onTap: () {
-        // Khi nhấn vào một bài luyện tập, chuyển đến màn hình Cửa và Chặng
+      onTap: () async {
+        var data = await JourneyService.getJourneyOnJourneyId(journeyId);
+        var journey = GetDataFromMap.getJourney(data)!;
+        var userProcess = GetDataFromMap.getUserProgress(data)!;
+
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CuaVaChang(title: title),
+            builder: (context) => CuaVaChang(
+              gateList: journey.gates,
+              userProgress: userProcess,
+            ),
           ),
         );
       },
       child: Container(
-        height: 140, // Giảm chiều cao khung vuông
-        width: 120,  // Giảm chiều rộng khung vuông
+        width: double.infinity, // Khung chiếm toàn bộ chiều rộng
+        margin: const EdgeInsets.symmetric(vertical: 8), // Khoảng cách giữa các Card
+        padding: const EdgeInsets.all(16), // Padding bên trong Card
         decoration: BoxDecoration(
-          color: Colors.grey.shade300, // Màu nền xám nhạt
-          borderRadius: BorderRadius.circular(12), // Bo góc nhẹ
+          color: Colors.white, // Màu nền trắng
+          borderRadius: BorderRadius.circular(16), // Bo góc đẹp hơn
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
+              color: Colors.grey.withOpacity(0.15), // Màu bóng nhẹ
               spreadRadius: 2,
-              blurRadius: 5,
-              offset: const Offset(0, 3), // Đổ bóng nhẹ
+              blurRadius: 8,
+              offset: const Offset(0, 4), // Đổ bóng mềm
             ),
           ],
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0), // Padding cho toàn bộ khung
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // Cho phép cột tự điều chỉnh chiều cao
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Tiêu đề
+            Center(
+              child: Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 22, // Giảm kích thước font so với tiêu đề AppBar (24px -> 22px)
+                  fontSize: 20, // Kích thước font vừa phải
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
-                textAlign: TextAlign.center,
               ),
-              Column(
-                children: [
-                  const SizedBox(height: 8),
-                  // Container bao quanh LinearProgressIndicator để điều chỉnh chiều rộng
-                  Container(
-                    width: 120, // Đặt chiều rộng thanh tiến trình bằng chiều rộng khung
-                    child: LinearProgressIndicator(
-                      value: progress / 100, // Tính tiến độ từ phần trăm
-                      backgroundColor: Colors.grey.shade400,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  // Phần trăm hoàn thành
-                  Text(
-                    '${progress.toStringAsFixed(0)}% hoàn thành',
-                    style: const TextStyle(
-                      fontSize: 20, // Giảm kích thước font so với tiêu đề (24px -> 20px)
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
+            ),
+            const SizedBox(height: 16),
+            // Thanh tiến trình nằm giữa
+            LinearProgressIndicator(
+              value: progress / 100, // Tính tiến độ từ phần trăm
+              backgroundColor: Colors.grey.shade300,
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+            ),
+            const SizedBox(height: 16),
+            // Phần trăm hoàn thành hiển thị bên dưới thanh
+            Text(
+              '${progress.toStringAsFixed(0)}% hoàn thành',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey.shade700,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
+
 }

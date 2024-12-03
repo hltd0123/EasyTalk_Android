@@ -1,4 +1,5 @@
 import 'package:dacn/Views/AiChat/ChatPage.dart';
+import 'package:dacn/Views/NguPhap/BaiTapNguPhap.dart';
 import 'package:dacn/Views/ThongTinTaiKhoang/AcountDetailPage.dart';
 import 'package:dacn/Views/Home/HomePage.dart';
 import 'package:dacn/Views/NguPhap/LuyenNguPhap.dart';
@@ -15,6 +16,7 @@ class AppRouter {
   static const String phatam = '/phatam';
   static const String setting = '/setting';
   static const String aichat = '/aichat';
+  static const String luyentapnguphap = '/luyentapnguphap';
 
   //Điều hướng theo tham số
   static Route<dynamic>? generateRoute(RouteSettings settings) {
@@ -32,6 +34,8 @@ class AppRouter {
         return customPageRoute(MainPagePhatAm(initPage: initPage,));
       case aichat:
         return customPageRoute(ChatPage());
+      case luyentapnguphap:
+        return customPageRoute(BaiTapNguPhap());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> {
                     text: 'Luyện tập',
                     colorArrow: Colors.blue,
                     menuOptions: [
-                      {'icon': Icons.chrome_reader_mode, 'text': 'Ngữ pháp'}, // Icon và text cho tùy chọn 1
+                      {'icon': Icons.chrome_reader_mode, 'text': 'Ngữ pháp', 'onClick': () => Navigator.pushNamed(context, '/luyentapnguphap')}, // Icon và text cho tùy chọn 1
                       {'icon': Icons.transcribe_rounded, 'text': 'Phát âm', 'onClick': () => Navigator.pushNamed(context, '/phatam', arguments: 1)},// Icon và text cho tùy chọn 2
                       {'icon': Icons.type_specimen_rounded, 'text': 'Từ vựng'},// Icon và text cho tùy chọn 3
                     ], // Các mục lựa chọn

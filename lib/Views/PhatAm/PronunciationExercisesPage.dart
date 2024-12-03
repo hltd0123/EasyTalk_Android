@@ -175,6 +175,7 @@ class PronunciationExercisesPage extends StatelessWidget {
         else
           Center(
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: _buildTextWidgets(lengthCheck, questionShow, provider.answer),
             ),
           ),
@@ -240,7 +241,7 @@ class PronunciationExercisesPage extends StatelessWidget {
             Text(
               '${showChar[i]} ',
               style: const TextStyle(
-                  fontSize: 22,
+                  fontSize: 21,
                   fontWeight: FontWeight.bold,
                   color: Colors.grey),
             ),
@@ -254,7 +255,7 @@ class PronunciationExercisesPage extends StatelessWidget {
               Text(
                 '${showChar[i]} ',
                 style: const TextStyle(
-                    fontSize: 22,
+                    fontSize: 21,
                     fontWeight: FontWeight.bold,
                     color: Colors.green),
               ),
@@ -264,7 +265,7 @@ class PronunciationExercisesPage extends StatelessWidget {
               Text(
                 '${showChar[i]} ',
                 style: const TextStyle(
-                    fontSize: 22,
+                    fontSize: 21,
                     fontWeight: FontWeight.bold,
                     color: Colors.red),
               ),
