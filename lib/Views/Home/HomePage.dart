@@ -1,3 +1,4 @@
+import 'package:dacn/Router/AppRouter.dart';
 import 'package:dacn/Views/WidgetBuiding/ContainerMenuItem.dart';
 import 'package:dacn/Views/WidgetBuiding/MenuItem.dart';
 import 'package:flutter/material.dart';
@@ -92,9 +93,9 @@ class _HomePageState extends State<HomePage> {
                     text: 'Bài học',
                     colorArrow: Colors.greenAccent,
                     menuOptions: [
-                      {'icon': Icons.chrome_reader_mode, 'text': 'Ngữ pháp', 'onClick': () => Navigator.pushNamed(context, '/nguphap')}, // Icon và text cho tùy chọn 1
-                      {'icon': Icons.transcribe_rounded, 'text': 'Phát âm', 'onClick': () => Navigator.pushNamed(context, '/phatam')}, // Icon và text cho tùy chọn 2
-                      {'icon': Icons.library_books, 'text': 'FlashCard'}, // Icon và text cho tùy chọn 3
+                      {'icon': Icons.chrome_reader_mode, 'text': 'Ngữ pháp', 'onClick': () => Navigator.pushNamed(context, AppRouter.nguphap)}, // Icon và text cho tùy chọn 1
+                      {'icon': Icons.transcribe_rounded, 'text': 'Phát âm', 'onClick': () => Navigator.pushNamed(context, AppRouter.phatam)}, // Icon và text cho tùy chọn 2
+                      {'icon': Icons.library_books, 'text': 'FlashCard', 'onClick': () => Navigator.pushNamed(context, AppRouter.flashcard)}, // Icon và text cho tùy chọn 3
                     ], // Các mục lựa chọn
                   ),
                   MenuItem(
@@ -102,8 +103,8 @@ class _HomePageState extends State<HomePage> {
                     text: 'Luyện tập',
                     colorArrow: Colors.blue,
                     menuOptions: [
-                      {'icon': Icons.chrome_reader_mode, 'text': 'Ngữ pháp', 'onClick': () => Navigator.pushNamed(context, '/luyentapnguphap')}, // Icon và text cho tùy chọn 1
-                      {'icon': Icons.transcribe_rounded, 'text': 'Phát âm', 'onClick': () => Navigator.pushNamed(context, '/phatam', arguments: 1)},// Icon và text cho tùy chọn 2
+                      {'icon': Icons.chrome_reader_mode, 'text': 'Ngữ pháp', 'onClick': () => Navigator.pushNamed(context, AppRouter.luyentapnguphap)}, // Icon và text cho tùy chọn 1
+                      {'icon': Icons.transcribe_rounded, 'text': 'Phát âm', 'onClick': () => Navigator.pushNamed(context, AppRouter.phatam, arguments: 1)},// Icon và text cho tùy chọn 2
                       {'icon': Icons.type_specimen_rounded, 'text': 'Từ vựng'},// Icon và text cho tùy chọn 3
                     ], // Các mục lựa chọn
                   ),

@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setString('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MmM3OWZjMTQwZDAwYzYwZDRkYTAwNCIsInJvbGUiOiJ1c2VyIiwidXNlcm5hbWUiOiJWaW5wcm8iLCJpYXQiOjE3MzI5NzQxNjgsImV4cCI6MTczMjk3Nzc2OH0.IQQx15wBA-MJlH35W0YPK8MwIILVrpR1Hfp4CZK4GT8');
+  await prefs.setString('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MmM3OWZjMTQwZDAwYzYwZDRkYTAwNCIsInJvbGUiOiJ1c2VyIiwidXNlcm5hbWUiOiJWaW5wcm8iLCJpYXQiOjE3MzMyODg0MzUsImV4cCI6MTczMzI5MjAzNX0.3zrVGpUIf1ikBwvo5w9NlpPbDrA-TWtlPxlA2-83aZc');
   runApp(
     ChangeNotifierProvider(
       create: (context) => MainPageProvider(),
