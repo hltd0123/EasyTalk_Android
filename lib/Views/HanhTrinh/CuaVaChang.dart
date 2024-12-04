@@ -182,7 +182,7 @@ class BaiTapScreen extends StatefulWidget {
 }
 
 class _BaiTapScreenState extends State<BaiTapScreen> {
-  String _currentAnswer = '';
+  TextEditingController textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -243,7 +243,7 @@ class _BaiTapScreenState extends State<BaiTapScreen> {
                     ElevatedButton(
                       onPressed: () {
                         provider.checkAnswer(
-                          _currentAnswer,
+                          textController.text,
                           currentQuestion,
                         );
                       },
@@ -352,12 +352,10 @@ class _BaiTapScreenState extends State<BaiTapScreen> {
       spacing: 8.0,
       runSpacing: 8.0,
       children: options.asMap().entries.map((entry) {
-        int idx = entry.key;
         String option = entry.value;
         return ElevatedButton(
           onPressed: () {
             if(provider.isQuestionResult(provider.currentQuestionIndex) == null){
-              _currentAnswer = option;
               provider.setAnswer(option);
             }
           },
@@ -383,7 +381,6 @@ class _BaiTapScreenState extends State<BaiTapScreen> {
 
   // Widget cho translation và fill-in-the-blank
   Widget _buildTranslationAndFill(QuestionStageProvider provider) {
-    TextEditingController textController = TextEditingController();
     return Column(
       children: [
         TextField(

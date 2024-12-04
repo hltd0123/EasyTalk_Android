@@ -31,6 +31,7 @@ class QuestionStageProvider extends ChangeNotifier {
     else{
       questionResult[currentQuestionIndex] = false;
     }
+    setAnswer(answer);
     numQuestionAnswer ++;
     notifyListeners();
   }

@@ -1,10 +1,7 @@
-import 'package:dacn/Model/Gate.dart';
-import 'package:dacn/Model/Journey.dart';
-import 'package:dacn/Model/UserProgress.dart';
 import 'package:dacn/Service/APICall/JourneyService.dart';
 import 'package:dacn/Service/Local/GetDataFromMap.dart';
 import 'package:flutter/material.dart';
-import 'CuaVaChang.dart'; // Import màn hình mới
+import 'CuaVaChang.dart';
 
 class HanhTrinh extends StatelessWidget {
   const HanhTrinh({super.key});
