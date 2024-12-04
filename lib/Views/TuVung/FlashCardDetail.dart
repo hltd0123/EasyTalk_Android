@@ -1,28 +1,36 @@
+import 'dart:convert';
+
+import 'package:dacn/Model/FlashCard.dart';
+import 'package:dacn/Model/FlashCardList.dart';
+import 'package:dacn/Router/AppRouter.dart';
+import 'package:dacn/Service/APICall/FlashCardService.dart';
 import 'package:flutter/material.dart';
 
 class FlashCardDetail extends StatefulWidget {
-  final Map<String, dynamic> flashCard;
+  final FlashCardList flashCardList;
 
-  const FlashCardDetail({super.key, required this.flashCard});
+  const FlashCardDetail({super.key, required this.flashCardList});
 
   @override
   _FlashCardDetailState createState() => _FlashCardDetailState();
 }
 
 class _FlashCardDetailState extends State<FlashCardDetail> {
-  int vocabularyCount = 0;
+  late Future<List<FlashCard>> _flashCardList;
 
   @override
   void initState() {
     super.initState();
-    vocabularyCount = widget.flashCard['vocabulary'] ?? 0;
+    _flashCardList = FlashCardService.getFlashCardListOnId(id: widget.flashCardList.id ?? '');
   }
 
   void _addWord() {
     String word = '';
     String pronunciation = '';
     String meaning = '';
-    String wordType = 'Danh từ'; // Mặc định là Danh từ
+    String pos = '';
+    String exampleSentence = '';
+    String image = '';
 
     showDialog(
       context: context,
@@ -53,10 +61,10 @@ class _FlashCardDetailState extends State<FlashCardDetail> {
                 const SizedBox(height: 16),
                 const Text('Loại từ vựng:'),
                 DropdownButton<String>(
-                  value: wordType,
+                  value: pos,
                   onChanged: (String? newValue) {
                     setState(() {
-                      wordType = newValue!;
+                      pos = newValue!;
                     });
                   },
                   items: <String>['Danh từ', 'Động từ', 'Tính từ', 'Trạng từ']
@@ -66,6 +74,18 @@ class _FlashCardDetailState extends State<FlashCardDetail> {
                       child: Text(value),
                     );
                   }).toList(),
+                ),
+                const SizedBox(height: 16),
+                const Text('Ví dụ câu:'),
+                TextField(
+                  onChanged: (value) => exampleSentence = value,
+                  decoration: const InputDecoration(hintText: 'Nhập ví dụ câu'),
+                ),
+                const SizedBox(height: 16),
+                const Text('Ảnh :'),
+                TextField(
+                  onChanged: (value) => image = value,
+                  decoration: const InputDecoration(hintText: 'Nhập ảnh ở dạng Base64'),
                 ),
               ],
             ),
@@ -77,32 +97,23 @@ class _FlashCardDetailState extends State<FlashCardDetail> {
             ),
             TextButton(
               onPressed: () {
-                if (word.isNotEmpty && pronunciation.isNotEmpty && meaning.isNotEmpty) {
+                if (word.isNotEmpty && pronunciation.isNotEmpty && meaning.isNotEmpty && pos.isNotEmpty && exampleSentence.isNotEmpty && image.isNotEmpty) {
                   setState(() {
-                    // Thêm từ vựng vào danh sách của flashCard
-                    widget.flashCard['words'] ??= [];  // Nếu chưa có từ vựng, tạo danh sách trống
-                    widget.flashCard['words'].add({
-                      'word': word,
-                      'pronunciation': pronunciation,
-                      'meaning': meaning,
-                      'type': wordType,
-                    });
-
-                    // Cập nhật số từ vựng
-                    vocabularyCount = widget.flashCard['words'].length;
-                    widget.flashCard['vocabulary'] = vocabularyCount;  // Cập nhật lại số từ vựng
+                    FlashCard newFlashCard = FlashCard(
+                      word: word,
+                      pronunciation: pronunciation,
+                      meaning: meaning,
+                      pos: pos,
+                      exampleSentence: exampleSentence,
+                      image: image,
+                    );
+                    FlashCardService.addFlashCard(newFlashCard, widget.flashCardList.id ?? widget.flashCardList.id!);
+                    widget.flashCardList.wordCount++;
                   });
-                  Navigator.of(context).pop();  // Đóng hộp thoại sau khi thêm
-
-                  // Hiển thị thông báo thành công
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Từ vựng đã được thêm thành công!')),
-                  );
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Từ vựng đã được thêm thành công!')));
                 } else {
-                  // Hiển thị thông báo nếu có trường nào trống
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Vui lòng điền đầy đủ thông tin!")),
-                  );
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Vui lòng điền đầy đủ thông tin!")));
                 }
               },
               child: const Text('Thêm'),
@@ -112,6 +123,7 @@ class _FlashCardDetailState extends State<FlashCardDetail> {
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,73 +135,123 @@ class _FlashCardDetailState extends State<FlashCardDetail> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          widget.flashCard['title'] ?? 'Chi Tiết FlashCard',
+          widget.flashCardList.name,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
         ),
-        centerTitle: true, // Căn giữa tiêu đề
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add, color: Colors.blue),
+            onPressed: _addWord,
+          ),
+        ],
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            // Số từ vựng dưới AppBar
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: Text(
-                'Số từ vựng: $vocabularyCount',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            const SizedBox(height: 20),
-            // Hiển thị nút thêm + ở giữa màn hình
-            Expanded(
-              child: Center(
-                child: GestureDetector(
-                  onTap: _addWord,
-                  child: Container(
-                    width: 150,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      color: Colors.blue.shade100,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Colors.blue,
-                        width: 2,
+        child: FutureBuilder<List<FlashCard>>(
+          future: _flashCardList,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Có lỗi xảy ra: ${snapshot.error}'));
+            } else if (snapshot.hasData) {
+              var flashCards = snapshot.data!;
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Text(
+                      'Số từ vựng: ${widget.flashCardList.wordCount}',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
-                    ),
-                    child: const Icon(
-                      Icons.add,
-                      size: 50,
-                      color: Colors.blue,
+                      textAlign: TextAlign.center,
                     ),
                   ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            // Hiển thị danh sách các từ vựng đã thêm
-            Expanded(
-              flex: 2,
-              child: widget.flashCard['words']?.isEmpty ?? true
-                  ? Center(
-                child: Text('Chưa có từ vựng nào.'),
-              )
-                  : ListView.builder(
-                itemCount: widget.flashCard['words'].length,
-                itemBuilder: (context, index) {
-                  final word = widget.flashCard['words'][index];
-                  return ListTile(
-                    title: Text(word['word']),
-                    subtitle: Text('Loại: ${word['type']} - Phiên âm: ${word['pronunciation']}'),
-                  );
-                },
-              ),
-            ),
-          ],
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () => Navigator.pushNamed(
+                        context, AppRouter.flashcardstudying,
+                        arguments: flashCards),
+                    child: const Text('Nhấn để học'),
+                  ),
+                  const SizedBox(height: 20),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: flashCards.length,
+                      itemBuilder: (context, index) {
+                        final flashCard = flashCards[index];
+                        return Card(
+                          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.all(16),
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            constraints: BoxConstraints(
+                              minHeight: MediaQuery.of(context).size.height * 0.3, // Chiều cao tối thiểu là 30% chiều cao màn hình
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Center(
+                                  child: Text(
+                                    flashCard.word,
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Loại: ${flashCard.pos} - Phiên âm: ${flashCard.pronunciation}',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Nghĩa: ${flashCard.meaning}',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Ví dụ: ${flashCard.exampleSentence}',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: flashCard.image.isNotEmpty
+                                      ? Image.memory(
+                                    base64Decode(flashCard.image),
+                                    fit: BoxFit.cover,
+                                    width: 100,
+                                    height: 100,
+                                  )
+                                      : const SizedBox.shrink(),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              );
+            } else {
+              return const Center(child: Text('Không có dữ liệu.'));
+            }
+          },
         ),
       ),
     );
