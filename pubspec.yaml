@@ -52,6 +52,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   provider: ^6.1.2
   flutter_widget_from_html: ^0.15.3
+  flip_card: ^0.7.0
 
 dev_dependencies:
   flutter_test:
