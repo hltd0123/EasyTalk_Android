@@ -1,9 +1,9 @@
 class UserProgress {
-  String id;
-  String user;
+  String? id;
+  String? user;
   List<String> unlockedGates;
   List<String> unlockedStages;
-  int experiencePoints;
+  int? experiencePoints;
 
   UserProgress({
     required this.id,

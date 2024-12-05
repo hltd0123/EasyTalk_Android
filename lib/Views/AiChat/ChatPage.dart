@@ -119,7 +119,7 @@ class _ChatPageState extends State<ChatPage> {
           Column(
             children: [
               AppBar(
-                title: const Text('Chat With AI To Study'),
+                title: const Text('Chat With AI'),
                 backgroundColor: Colors.transparent,
                 elevation: 0,
                 centerTitle: true,

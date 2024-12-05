@@ -1,11 +1,76 @@
 import 'dart:convert';
 import 'package:dacn/Model/FlashCard.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FlashCardService {
   static String domain = dotenv.env['domain']!;
+
+  static String _getValueById(var e, String fieldName, String id) {
+    final element = e.querySelector('#$fieldName-$id');
+
+    // Nếu element tồn tại
+    if (element != null) {
+      // Kiểm tra nếu có thuộc tính value
+      return element.attributes['value']?.trim() ?? element.text.trim();
+    }
+
+    return '';
+  }
+
+  static Future<List<FlashCard>> getFlashCardListOnId({
+    required String id,
+    int page = 1,
+    int limit = 5,
+  }) async {
+
+    final String url = "$domain/flashcards/flashcardlist/$id";
+    final Map<String, String> queryParameters = {
+      'page': page.toString(),
+      'limit': limit.toString(),
+    };
+
+    final uri = Uri.parse(url).replace(queryParameters: queryParameters);
+
+    try {
+      final response = await http.get(uri);
+      if (response.statusCode == 200) {
+        final document = parse(response.body);
+
+        // Tìm tất cả các div có class 'flashcard-item row'
+        final flashcardElements = document.querySelectorAll('.flashcard-item.row');
+
+        List<FlashCard> flashcards = flashcardElements.map((e) {
+          final id = e.querySelector('form')?.attributes['data-flashcard-id'] ?? '';
+
+          String word = _getValueById(e, 'word', id);
+          String meaning = _getValueById(e, 'meaning', id);
+          String pos = _getValueById(e, 'pos', id);
+          String pronunciation = _getValueById(e, 'pronunciation', id);
+          String exampleSentence = _getValueById(e, 'exampleSentence', id);
+          String image = _getValueById(e, 'current-image', id);
+
+          return FlashCard(
+            id: id,
+            word: word,
+            meaning: meaning,
+            pos: pos,
+            pronunciation: pronunciation,
+            exampleSentence: exampleSentence,
+            image: image,
+          );
+        }).toList();
+
+        return flashcards;
+      } else {
+        throw Exception('Failed to fetch flashcards: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error occurred: $e');
+    }
+  }
 
   static Future<String?> addFlashCard(FlashCard flashCard, String flashCardListId) async {
     // Lấy token từ SharedPreferences
@@ -110,5 +175,6 @@ class FlashCardService {
       return false; // Trả về false nếu không thành công
     }
   }
+
 
 }

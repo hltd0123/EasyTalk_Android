@@ -1,48 +1,64 @@
+import 'package:dacn/Model/Page.dart';
 import 'package:flutter/material.dart';
+import 'package:dacn/Model/FlashCardList.dart';
+import 'package:dacn/Service/APICall/FlashCardListService.dart';
+import 'package:dacn/Service/Local/GetDataFromMap.dart';
 import 'package:dacn/Views/TuVung/FlashCardDetail.dart';
 
-class FlashCard extends StatefulWidget {
-  const FlashCard({super.key});
+class FlashCardPage extends StatefulWidget {
+  const FlashCardPage({super.key});
 
   @override
-  _FlashCardState createState() => _FlashCardState();
+  _FlashCardPageState createState() => _FlashCardPageState();
 }
 
-class _FlashCardState extends State<FlashCard> {
-  final List<Map<String, String>> _flashCards = [];
+class _FlashCardPageState extends State<FlashCardPage> {
+  final List<FlashCardList> _flashCardLists = [];
+  PageModel _page = PageModel();
+  bool _isLoading = false;
 
-  void _addFlashCard() {
+  // Hàm gọi dịch vụ để lấy danh sách FlashCard với phân trang
+  void _loadFlashCards() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final data = await FlashCardListService.getFlashCardListOnPage(page: _page.currentPage);
+    List<FlashCardList> flashCards = GetDataFromMap.getFlashCardList(data) ?? [];
+    PageModel page = GetDataFromMap.getPage(data) ?? PageModel();
+
+    setState(() {
+      _isLoading = false;
+      _flashCardLists.addAll(flashCards);
+      _page = page;
+    });
+  }
+
+  // Hàm gọi màn hình tạo FlashCardList mới
+  void _addFlashCardList() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        String title = '';
-        String content = '';
+        String name = '';
+        String description = '';
 
         return AlertDialog(
-          title: const Text('Tạo FlashCard'),
+          title: const Text('Tạo FlashCard List'),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Tiêu đề:',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                const SizedBox(height: 10),
+                const Text('Tên danh sách:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                 TextField(
-                  onChanged: (value) => title = value,
+                  onChanged: (value) => name = value,
                   decoration: const InputDecoration(),
                   style: const TextStyle(fontSize: 18),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  'Nội dung:',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                const SizedBox(height: 10),
+                const Text('Mô tả:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                 TextField(
-                  onChanged: (value) => content = value,
+                  onChanged: (value) => description = value,
                   decoration: const InputDecoration(),
                   style: const TextStyle(fontSize: 18),
                   maxLines: 3,
@@ -57,12 +73,13 @@ class _FlashCardState extends State<FlashCard> {
             ),
             TextButton(
               onPressed: () {
-                if (title.isNotEmpty && content.isNotEmpty) {
+                if (name.isNotEmpty && description.isNotEmpty) {
                   setState(() {
-                    _flashCards.add({
-                      'title': title,
-                      'content': content,
-                    });
+                    _flashCardLists.add(FlashCardList(
+                      name: name,
+                      description: description,
+                      wordCount: 0, // Số từ vựng mặc định là 0
+                    ));
                   });
                   Navigator.of(context).pop();
                 }
@@ -75,21 +92,40 @@ class _FlashCardState extends State<FlashCard> {
     );
   }
 
-  void _openDetailScreen(Map<String, String> flashCard) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => FlashCardDetail(flashCard: flashCard),
-      ),
-    );
+  // Hàm chuyển trang
+  void _nextPage(int max) {
+    if(_page.currentPage < max){
+      setState(() {
+        _page.currentPage++;
+        _flashCardLists.clear();  // Xóa danh sách cũ trước khi tải trang mới
+        _loadFlashCards();
+      });
+    }
+  }
+
+  void _previousPage() {
+    if (_page.currentPage > 1) {
+      setState(() {
+        _page.currentPage--;
+        _flashCardLists.clear();
+        _loadFlashCards();
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFlashCards(); // Load danh sách khi khởi tạo trang
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text(
-          'Flash Cards',
+          'Flash Card Lists',
           style: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
@@ -102,96 +138,98 @@ class _FlashCardState extends State<FlashCard> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: _flashCards.isNotEmpty
-            ? [
+        actions: [
           IconButton(
             icon: const Icon(Icons.add, color: Colors.black),
-            onPressed: _addFlashCard,
+            onPressed: _addFlashCardList, // Mở màn hình tạo mới FlashCardList
           ),
-        ]
-            : null,
+        ],
       ),
       body: SafeArea(
-        child: Column(
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 16.0),
-              child: Text(
-                _flashCards.isEmpty
-                    ? 'Bạn chưa tạo FlashCard nào'
-                    : 'Danh sách FlashCards',
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+              child: Center(
+                child: Text(
+                  _flashCardLists.isEmpty
+                      ? 'Bạn chưa tạo FlashCard List nào'
+                      : 'Danh sách FlashCard Lists',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 20),
             Expanded(
-              child: _flashCards.isEmpty
-                  ? Center(
-                child: GestureDetector(
-                  onTap: _addFlashCard,
-                  child: Container(
-                    width: 150,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      color: Colors.blue.shade100,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Colors.blue,
-                        width: 2,
-                      ),
-                    ),
-                    child: const Icon(
-                      Icons.add,
-                      size: 50,
-                      color: Colors.blue,
-                    ),
-                  ),
-                ),
-              )
-                  : ListView.builder(
-                itemCount: _flashCards.length,
+              child: ListView.builder(
+                itemCount: _flashCardLists.length,
                 itemBuilder: (context, index) {
-                  final flashCard = _flashCards[index];
+                  final flashCard = _flashCardLists[index];
                   return Card(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 8),
+                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: ListTile(
-                      title: Text(flashCard['title']!),
+                      title: Text(flashCard.name),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Nội dung: ${flashCard['content']}'),
-                          Text(
-                            'Số từ vựng: 0', // Số từ vựng mặc định là 0
-                          ),
+                          Text('Mô tả: ${flashCard.description}'),
+                          Text('Số từ vựng: ${flashCard.wordCount ?? 0}'),
                         ],
                       ),
-                      onTap: () => _openDetailScreen(flashCard),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          setState(() {
-                            _flashCards.removeAt(index);
-                          });
-                        },
-                      ),
+                      onTap: () {
+                        // Xử lý khi click vào một FlashCardList
+                        _openDetailScreen(flashCard);
+                      },
                     ),
                   );
                 },
               ),
             ),
+            // Hiển thị các nút chuyển trang
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: _previousPage,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text('Trang trước'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => _nextPage(_page.totalPages),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text('Trang sau'),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addFlashCard,
-        child: const Icon(Icons.add),
+    );
+  }
+
+  // Mở màn hình chi tiết
+  void _openDetailScreen(FlashCardList flashCard) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FlashCardDetail(flashCardList: flashCard),
       ),
     );
   }
 }
-

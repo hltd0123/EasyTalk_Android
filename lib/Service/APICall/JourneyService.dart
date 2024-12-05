@@ -26,7 +26,6 @@ class JourneyService {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-
       return {
         'journeys': List<Journey>.from(data['journeys'].map((x) => Journey.fromJson(x))),
         'userProgress': UserProgress.fromJson(data['userProgress']),

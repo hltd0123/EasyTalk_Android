@@ -3,14 +3,14 @@ class FlashCardList {
   String name;
   String description;
   String? createdAt;  // Thêm thuộc tính createdAt
-  int? wordCount;  // Thêm thuộc tính wordCount
+  int wordCount;  // Thêm thuộc tính wordCount
 
   FlashCardList({
     this.id,
     required this.name,
     required this.description,
     this.createdAt,
-    this.wordCount,
+    required this.wordCount,
   });
 
   // Convert model to JSON
@@ -31,7 +31,7 @@ class FlashCardList {
       name: json['name'],
       description: json['description'],
       createdAt: json['createdAt'],
-      wordCount: json['wordCount'],
+      wordCount: json['wordCount'] ?? 0,
     );
   }
 }

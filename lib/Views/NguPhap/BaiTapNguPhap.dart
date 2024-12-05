@@ -1,4 +1,9 @@
+import 'package:dacn/Service/APICall/GrammarExerciseService.dart';
+import 'package:dacn/Service/Local/GetDataFromMap.dart';
+import 'package:dacn/Views/NguPhap/GrammarExerciseProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:dacn/Model/GrammarExercise.dart';
+import 'package:provider/provider.dart';
 
 class BaiTapNguPhap extends StatefulWidget {
   const BaiTapNguPhap({super.key});
@@ -8,21 +13,16 @@ class BaiTapNguPhap extends StatefulWidget {
 }
 
 class _BaiTapNguPhapState extends State<BaiTapNguPhap> {
-  // Danh sách các bài tập ngữ pháp
-  final List<Map<String, String>> grammarExercises = [
-    {'title': 'Bài tập 1: Verb Forms', 'description': 'Chọn động từ đúng theo ngữ cảnh.'},
-    {'title': 'Bài tập 2: Tenses', 'description': 'Chọn thì đúng cho câu.'},
-    {'title': 'Bài tập 3: Prepositions', 'description': 'Điền giới từ phù hợp.'},
-    {'title': 'Bài tập 4: Articles', 'description': 'Chọn mạo từ đúng.'},
-    {'title': 'Bài tập 5: Conditional Sentences', 'description': 'Chọn câu điều kiện đúng.'},
-  ];
+
+  // Tạo một Future để lấy dữ liệu từ API
+  final Future<Map<String, dynamic>> dataExGet = GrammarExerciseService.getGrammarExercisesOnPage();
 
   // Hàm điều hướng đến bài tập ngữ pháp cụ thể
-  void _goToGrammarExercise(int index) {
+  void _goToGrammarExercise(GrammarExercise grammarExercise) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => GrammarExercisePage(exerciseIndex: index),
+        builder: (context) => GrammarExercisePage(grammarExercise: grammarExercise),
       ),
     );
   }
@@ -31,27 +31,42 @@ class _BaiTapNguPhapState extends State<BaiTapNguPhap> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Danh sách bài tập ngữ pháp'),
+        title: const Text('Danh sách bài tập'),
         centerTitle: true,
       ),
-      body: ListView.builder(
-        itemCount: grammarExercises.length,
-        itemBuilder: (context, index) {
-          final exercise = grammarExercises[index];
-          return Card(
-            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-            child: ListTile(
-              title: Text(
-                exercise['title']!,
-                style: const TextStyle(fontSize: 20),  // Tăng kích thước font chữ tiêu đề
-              ),
-              subtitle: Text(
-                exercise['description']!,
-                style: const TextStyle(fontSize: 16),  // Tăng kích thước font chữ mô tả
-              ),
-              onTap: () => _goToGrammarExercise(index),  // Khi chọn bài tập
-            ),
-          );
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: dataExGet,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());  // Hiển thị khi đang tải dữ liệu
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Lỗi: ${snapshot.error}'));  // Hiển thị lỗi nếu có
+          } else if (snapshot.hasData) {
+            final exercises = GetDataFromMap.getGrammarExercisesList(snapshot.data!) ?? [];
+
+            return ListView.builder(
+              itemCount: exercises.length,
+              itemBuilder: (context, index) {
+                final exercise = exercises[index];
+                return Card(
+                  margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  child: ListTile(
+                    title: Text(
+                      exercise.title,
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                    subtitle: const Text(
+                      'Mô tả bài tập',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    onTap: () => _goToGrammarExercise(exercise),  // Khi chọn bài tập
+                  ),
+                );
+              },
+            );
+          } else {
+            return const Center(child: Text('Không có dữ liệu'));  // Hiển thị nếu không có dữ liệu
+          }
         },
       ),
     );
@@ -59,185 +74,239 @@ class _BaiTapNguPhapState extends State<BaiTapNguPhap> {
 }
 
 class GrammarExercisePage extends StatefulWidget {
-  final int exerciseIndex;
+  final GrammarExercise grammarExercise;
 
-  const GrammarExercisePage({super.key, required this.exerciseIndex});
+  const GrammarExercisePage({
+    Key? key,
+    required this.grammarExercise,
+  }) : super(key: key);
 
   @override
-  _GrammarExercisePageState createState() => _GrammarExercisePageState();
+  State<GrammarExercisePage> createState() => _GrammarExercisePageState();
 }
 
 class _GrammarExercisePageState extends State<GrammarExercisePage> {
-  int _currentQuestionIndex = 0;  // Chỉ số câu hỏi hiện tại
-  int _correctAnswers = 0;  // Số câu đúng
-  int _incorrectAnswers = 0;  // Số câu sai
+  TextEditingController textController = TextEditingController();
 
-  // Các câu hỏi của bài tập
-  List<Map<String, dynamic>> grammarQuestions = [
-    {
-      'question': 'Choose the correct verb form:'
-          ' I ___ to school every day.',
-      'options': ['go', 'goes', 'gone', 'went'],
-      'correctAnswer': 'go',
-    },
-    {
-      'question': 'Choose the correct sentence:'
-          ' ___ you like to play football?',
-      'options': ['Do', 'Does', 'Are', 'Is'],
-      'correctAnswer': 'Do',
-    },
-    {
-      'question': 'Choose the correct word: '
-          'She is ___ than me.',
-      'options': ['taller', 'more tall', 'tall', 'tallest'],
-      'correctAnswer': 'taller',
-    },
-    {
-      'question': 'Which sentence is correct?',
-      'options': [
-        'She can sings well.',
-        'She can sing well.',
-        'She sing can well.',
-        'She well can sing.',
-      ],
-      'correctAnswer': 'She can sing well.',
-    },
-    {
-      'question': 'Choose the correct word: '
-          'I am very ___ today.',
-      'options': ['happy', 'happily', 'happiness', 'happier'],
-      'correctAnswer': 'happy',
-    },
-  ];
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => GrammarExerciseProvider(widget.grammarExercise.questions),
+      child: Consumer<GrammarExerciseProvider>(
+        builder: (context, provider, _) {
+          final currentQuestion =
+          provider.grammarExerciseQuestion[provider.currentQuestionIndex];
+          int numQuestion = provider.grammarExerciseQuestion.length;
 
-  // Hàm kiểm tra câu trả lời
-  void _checkAnswer(String selectedAnswer) {
-    final currentQuestion = grammarQuestions[_currentQuestionIndex];
-    if (selectedAnswer == currentQuestion['correctAnswer']) {
-      setState(() {
-        _correctAnswers++;
-      });
-    } else {
-      setState(() {
-        _incorrectAnswers++;
-      });
-    }
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Bài kiểm tra'),
+              backgroundColor: Colors.blue.shade700,
+              centerTitle: true,
+              automaticallyImplyLeading: false,
+              actions: [
+                IconButton(
+                  onPressed: () async {
+                    if (await _showExitDialog(context)) {
+                      await provider.endQuestion(context);
+                    }
+                  },
+                  icon: const Icon(
+                    Icons.exit_to_app_rounded,
+                    color: Colors.black,
+                  ),
+                  iconSize: 30,
+                ),
+              ],
+            ),
+            body: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Text(
+                      currentQuestion.question,
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  if (currentQuestion.type == 'multiple-choice')
+                    _buildMultipleChoice(
+                        currentQuestion.options, provider)
+                  else if (currentQuestion.type == 'translation' ||
+                      currentQuestion.type == 'fill-in-the-blank')
+                    _buildTranslationAndFill(provider),
+
+                  const SizedBox(height: 20),
+
+                  if (provider.isQuestionResult(provider.currentQuestionIndex) ==
+                      null)
+                    ElevatedButton(
+                      onPressed: () {
+                        provider.checkAnswer(
+                          textController.text,
+                          currentQuestion,
+                        );
+                      },
+                      child: const Text('Kiểm tra đáp án'),
+                    ),
+
+                  if (provider.isQuestionResult(provider.currentQuestionIndex) !=
+                      null)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          if (provider.isQuestionResult(
+                              provider.currentQuestionIndex)!)
+                            const Text(
+                              'Chính xác!',
+                              style: TextStyle(
+                                  fontSize: 16, color: Colors.greenAccent),
+                            )
+                          else
+                            const Text(
+                              'Sai rùi!',
+                              style: TextStyle(
+                                  fontSize: 16, color: Colors.redAccent),
+                            ),
+                          Text(
+                            'Giải thích: ${currentQuestion.explanation}',
+                            style: const TextStyle(
+                                fontSize: 16, color: Colors.blue),
+                          ),
+                        ],
+                      ),
+                    ),
+                  const Spacer(),
+
+                  Wrap(
+                    spacing: 10.0,
+                    runSpacing: 10.0,
+                    children: List.generate(
+                      numQuestion,
+                          (index) => GestureDetector(
+                        onTap: () {
+                          textController.text = provider.answered[index];
+                          provider.goToQuestion(index);
+                        },
+                        child: Container(
+                          margin:
+                          const EdgeInsets.symmetric(horizontal: 5),
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: provider.currentQuestionIndex == index
+                                ? Colors.blue
+                                : (provider.isQuestionResult(index) == null
+                                ? Colors.grey.shade300
+                                : (provider.isQuestionResult(index) ==
+                                false
+                                ? Colors.red.shade300
+                                : Colors.green)),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: Text(
+                              "${index + 1}",
+                              style: TextStyle(
+                                color: provider.currentQuestionIndex ==
+                                    index
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 
-  // Chuyển sang câu hỏi tiếp theo
-  void _goToNextQuestion() {
-    setState(() {
-      if (_currentQuestionIndex < grammarQuestions.length - 1) {
-        _currentQuestionIndex++;
-      }
-    });
-  }
-
-  // Hiển thị kết quả
-  void _showResults() {
-    showDialog(
+  Future<bool> _showExitDialog(BuildContext context) async {
+    bool? exit = await showDialog<bool>(
       context: context,
-      builder: (BuildContext context) {
+      barrierDismissible: false,
+      builder: (context) {
         return AlertDialog(
-          title: const Text('Kết quả'),
-          content: Text(
-            'Số câu đúng: $_correctAnswers\nSố câu sai: $_incorrectAnswers',
-            style: const TextStyle(fontSize: 16),
-          ),
-          actions: <Widget>[
+          title: const Text('Thoát/Kết thúc'),
+          content: const Text('Muốn kết thúc thật không?'),
+          actions: [
             TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                // Reset lại bài tập sau khi xem kết quả
-                setState(() {
-                  _correctAnswers = 0;
-                  _incorrectAnswers = 0;
-                  _currentQuestionIndex = 0;
-                });
-              },
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Không'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Có'),
             ),
           ],
         );
       },
     );
+
+    return exit ?? false;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final currentQuestion = grammarQuestions[_currentQuestionIndex];
+  Widget _buildMultipleChoice(
+      List<String> options, GrammarExerciseProvider provider) {
+    return Wrap(
+      spacing: 8.0,
+      runSpacing: 8.0,
+      children: options.asMap().entries.map((entry) {
+        String option = entry.value;
+        return ElevatedButton(
+          onPressed: () {
+            if (provider.isQuestionResult(provider.currentQuestionIndex) ==
+                null) {
+              provider.setAnswer(option);
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: provider.answered[provider.currentQuestionIndex] ==
+                option
+                ? Colors.green
+                : Colors.white,
+          ),
+          child: Text(
+            option,
+            style: TextStyle(
+              color: provider.answered[provider.currentQuestionIndex] == option
+                  ? Colors.black
+                  : Colors.blueAccent,
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Bài tập ngữ pháp'),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Hiển thị câu hỏi
-            Text(
-              currentQuestion['question']!,
-              style: const TextStyle(
-                fontSize: 22,  // Tăng kích thước font chữ câu hỏi
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 20),
-            // Hiển thị các lựa chọn
-            for (var option in currentQuestion['options'])
-              ElevatedButton(
-                onPressed: () {
-                  _checkAnswer(option);  // Kiểm tra câu trả lời
-                  _goToNextQuestion();  // Chuyển sang câu hỏi tiếp theo
-                },
-                child: Text(option, style: const TextStyle(fontSize: 18)),  // Tăng kích thước font chữ lựa chọn
-              ),
-            const SizedBox(height: 20),
-            // Thêm các nút 1, 2, 3, 4, 5 để chuyển câu hỏi
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(grammarQuestions.length, (index) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _currentQuestionIndex = index;
-                    });
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 5),
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: _currentQuestionIndex == index
-                          ? Colors.blue
-                          : Colors.grey,
-                    ),
-                    child: Center(
-                      child: Text(
-                        (index + 1).toString(),
-                        style: const TextStyle(color: Colors.white, fontSize: 18),
-                      ),
-                    ),
-                  ),
-                );
-              }),
-            ),
-            const SizedBox(height: 20),
-            // Căn giữa nút Xem kết quả
-            if (_currentQuestionIndex == grammarQuestions.length - 1)
-              Center(
-                child: ElevatedButton(
-                  onPressed: _showResults,
-                  child: const Text('Xem kết quả', style: TextStyle(fontSize: 18)),
-                ),
-              ),
-          ],
+  Widget _buildTranslationAndFill(GrammarExerciseProvider provider) {
+    return Column(
+      children: [
+        TextField(
+          controller: textController,
+          decoration: const InputDecoration(
+            hintText: 'Xin câu trả lời nha...',
+            border: OutlineInputBorder(),
+          ),
         ),
-      ),
+      ],
     );
   }
 }
+
+
+
+
+
