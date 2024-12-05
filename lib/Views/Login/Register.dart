@@ -1,3 +1,5 @@
+import 'package:dacn/Router/AppRouter.dart';
+import 'package:dacn/Service/APICall/UserService.dart';
 import 'package:flutter/material.dart';
 
 class Register extends StatefulWidget {
@@ -132,7 +134,7 @@ class _RegisterState extends State<Register> {
                     // Nút Đăng ký căn giữa
                     Center(
                       child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           // Kiểm tra nếu form hợp lệ
                           if (_formKey.currentState?.validate() ?? false) {
                             // Xử lý đăng ký ở đây
@@ -140,10 +142,15 @@ class _RegisterState extends State<Register> {
                             String email = _emailController.text;
                             String password = _passwordController.text;
 
-                            // In thông tin đăng ký để kiểm tra
-                            print('Tên người dùng: $username');
-                            print('Email: $email');
-                            print('Mật khẩu: $password');
+                            if(await UserService.register(username, email, password, password)){
+                              Navigator.pushReplacementNamed(context, AppRouter.dangnhap);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Đăng ký thành công, vui lòng đăng nhập lại!'),
+                                  duration: Duration(seconds: 3),
+                                ),
+                              );
+                            }
                           }
                         },
                         child: const Text('Đăng Ký'),
