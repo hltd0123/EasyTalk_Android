@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:dacn/Model/Achievements.dart';
 import 'package:dacn/Model/User.dart';
+import 'package:dacn/Service/Local/UserStoreService.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UserService {
   static String domain = dotenv.env['domain']!;
 
-  static Future<String?> login(String email, String password) async {
+  static Future<bool> login(String email, String password) async {
     final response = await http.post(
       Uri.parse('$domain/login'),
       headers: {
@@ -22,9 +23,12 @@ class UserService {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      return data['token'];
+      await UserStoreService.setToken(data['token']);
+      UserStoreService.setEmail(email);
+      UserStoreService.setPass(password);
+      return true;
     } else {
-      return null;
+      return false;
     }
   }
 

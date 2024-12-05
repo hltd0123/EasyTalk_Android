@@ -1,4 +1,7 @@
+import 'package:dacn/Router/AppRouter.dart';
+import 'package:dacn/Service/APICall/UserService.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -87,7 +90,7 @@ class _LoginState extends State<Login> {
                     ),
                     const SizedBox(height: 20),
                     // Checkbox "Ghi nhớ đăng nhập"
-                    Row(
+                    /*Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Checkbox(
@@ -101,7 +104,7 @@ class _LoginState extends State<Login> {
                         const Text('Ghi nhớ đăng nhập'),
                       ],
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 20),*/
                     // Nút "Quên mật khẩu" căn trái
                     Align(
                       alignment: Alignment.centerLeft,
@@ -123,16 +126,30 @@ class _LoginState extends State<Login> {
                     // Nút Đăng nhập căn giữa
                     Center(
                       child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           // Kiểm tra nếu form hợp lệ
                           if (_formKey.currentState?.validate() ?? false) {
                             // Xử lý đăng nhập ở đây
                             String email = _emailController.text;
                             String password = _passwordController.text;
 
-                            // In thông tin đăng nhập để kiểm tra
-                            print('Email: $email');
-                            print('Mật khẩu: $password');
+                            if(await UserService.login(email, password)){
+                              Navigator.pushReplacementNamed(context, AppRouter.main);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Đăng nhập thành công!'),
+                                  duration: Duration(seconds: 3), // Thời gian hiển thị
+                                ),
+                              );
+                            }
+                            else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Tài khoảng hoặc mật khẩu bị sai'),
+                                  duration: Duration(seconds: 3), // Thời gian hiển thị
+                                ),
+                              );
+                            }
                           }
                         },
                         child: const Text('Đăng Nhập'),
@@ -143,8 +160,7 @@ class _LoginState extends State<Login> {
                     Center(
                       child: TextButton(
                         onPressed: () {
-                          // Xử lý chuyển đến màn hình đăng ký ở đây
-                          print('Chuyển đến màn hình đăng ký');
+                          Navigator.pushReplacementNamed(context, AppRouter.dangky);
                         },
                         child: const Text(
                           'Chưa có tài khoản? Đăng ký ngay',

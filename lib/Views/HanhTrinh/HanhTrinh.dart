@@ -1,11 +1,18 @@
 import 'package:dacn/Service/APICall/JourneyService.dart';
 import 'package:dacn/Service/Local/GetDataFromMap.dart';
+import 'package:dacn/Service/Local/UserStoreService.dart';
 import 'package:flutter/material.dart';
 import 'CuaVaChang.dart';
 
-class HanhTrinh extends StatelessWidget {
-  const HanhTrinh({super.key});
+class HanhTrinh extends StatefulWidget {
+  HanhTrinh({super.key});
+  bool isReload = true;
 
+  @override
+  State<HanhTrinh> createState() => _HanhTrinhState();
+}
+
+class _HanhTrinhState extends State<HanhTrinh> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +36,11 @@ class HanhTrinh extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            if (widget.isReload){
+              setState(() async {
+                widget.isReload = await UserStoreService.reloadToken();
+              });
+            }
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text('No data available'));
           }
@@ -142,5 +153,4 @@ class HanhTrinh extends StatelessWidget {
       ),
     );
   }
-
 }

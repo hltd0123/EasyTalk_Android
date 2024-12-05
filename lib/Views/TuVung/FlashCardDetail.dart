@@ -21,7 +21,7 @@ class _FlashCardDetailState extends State<FlashCardDetail> {
   @override
   void initState() {
     super.initState();
-    _flashCardList = FlashCardService.getFlashCardListOnId(id: widget.flashCardList.id ?? '');
+    _flashCardList = FlashCardService.getFlashCardListOnId(id: widget.flashCardList.id ?? '', limit: 1000);
   }
 
   void _addWord() {

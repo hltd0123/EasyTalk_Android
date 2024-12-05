@@ -1,11 +1,14 @@
 import 'package:dacn/Model/FlashCard.dart';
 import 'package:dacn/Views/AiChat/ChatPage.dart';
+import 'package:dacn/Views/Login/Login.dart';
+import 'package:dacn/Views/Login/Register.dart';
 import 'package:dacn/Views/NguPhap/BaiTapNguPhap.dart';
 import 'package:dacn/Views/ThongTinTaiKhoang/AcountDetailPage.dart';
 import 'package:dacn/Views/Home/HomePage.dart';
 import 'package:dacn/Views/NguPhap/LuyenNguPhap.dart';
 import 'package:dacn/Views/Home/MainPage.dart';
 import 'package:dacn/Views/PhatAm/MainPagePhatAm.dart';
+import 'package:dacn/Views/TuVung/BaiTapTuVung.dart';
 import 'package:dacn/Views/TuVung/FlashCard.dart';
 import 'package:dacn/Views/TuVung/FlashCardStudying.dart';
 import 'package:dacn/Views/WidgetBuiding/customPageRoute.dart';
@@ -22,27 +25,34 @@ class AppRouter {
   static const String luyentapnguphap = '/luyentapnguphap';
   static const String flashcard = '/flashcard';
   static const String flashcardstudying = '/flashcardstudying';
+  static const String baitaptuvung = '/baitaptuvung';
+  static const String dangnhap = '/dangnhap';
+  static const String dangky = '/dangky';
 
   //Điều hướng theo tham số
   static Route<dynamic>? generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case dangnhap:
+        return customPageRoute(const Login());
+      case dangky:
+        return customPageRoute(const Register());
       case main:
-        return customPageRoute(MainPage());
+        return customPageRoute(const MainPage());
       case home:
-        return customPageRoute(HomePage());
+        return customPageRoute(const HomePage());
       case nguphap:
-        return customPageRoute(HomeNP());
+        return customPageRoute(const HomeNP());
       case setting:
-        return customPageRoute(AccountDetailPage());
+        return customPageRoute(const AccountDetailPage());
       case phatam:
         final int initPage = settings.arguments is int ? settings.arguments as int : 0;
         return customPageRoute(MainPagePhatAm(initPage: initPage,));
       case aichat:
         return customPageRoute(ChatPage());
       case luyentapnguphap:
-        return customPageRoute(BaiTapNguPhap());
+        return customPageRoute(const BaiTapNguPhap());
       case flashcard:
-        return customPageRoute(FlashCardPage());
+        return customPageRoute(const FlashCardPage());
       case flashcardstudying:
         List<FlashCard> checkData = settings.arguments is List<FlashCard>
           ? settings.arguments as List<FlashCard>
@@ -51,9 +61,11 @@ class AppRouter {
           print('\n${d.id}');
         }
         return customPageRoute(FlashCardStudying(flashCards: checkData));
+      case baitaptuvung:
+        return customPageRoute(const BaiTapTuVung());
       default:
         return MaterialPageRoute(
-          builder: (_) => Scaffold(
+          builder: (_) => const Scaffold(
             body: Center(child: Text('Lỗi: Báo dev ngay đi')),
           ),
         );

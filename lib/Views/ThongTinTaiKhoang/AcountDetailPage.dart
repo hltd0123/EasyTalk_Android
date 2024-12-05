@@ -1,8 +1,12 @@
+import 'package:dacn/Router/AppRouter.dart';
+import 'package:dacn/Service/APICall/UserService.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dacn/Views/NhacNho/Reminder.dart';
 import 'package:dacn/Views/ThongTinTaiKhoang/AccountInfoPage.dart';
 import 'dart:io';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class AccountDetailPage extends StatefulWidget {
@@ -127,6 +131,17 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
                 icon: const Icon(Icons.help, color: Colors.white),
                 text: 'Trợ giúp & Phản hồi',
                 borderColor: Colors.blue,
+              ),
+              const SizedBox(height: 8.0),
+              MenuItem(
+                icon: const Icon(Icons.exit_to_app, color: Colors.white),
+                text: 'Đăng xuất',
+                borderColor: Colors.blue,
+                onTap: () async {
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  await prefs.remove('token');
+                  Navigator.pushReplacementNamed(context, AppRouter.dangnhap);
+                },
               ),
             ],
           ),

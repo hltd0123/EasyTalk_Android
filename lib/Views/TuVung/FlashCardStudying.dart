@@ -135,7 +135,7 @@ class FlashCardStudying extends StatelessWidget {
             const SizedBox(height: 10),
             Text(
               '/${flashCard.pronunciation}/',
-              style: const TextStyle(fontSize: 18, fontStyle: FontStyle.italic, color: Colors.grey),
+              style: const TextStyle(fontSize: 18, fontStyle: FontStyle.italic, color: Colors.black),
               textAlign: TextAlign.center,
             ),
           ],

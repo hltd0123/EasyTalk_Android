@@ -43,7 +43,7 @@ class MainPage extends StatelessWidget {
             case 0:
               return const HomePage();
             case 1:
-              return const HanhTrinh();
+              return HanhTrinh();
             case 3:
               return const AccountDetailPage();
 
