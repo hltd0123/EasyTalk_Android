@@ -1,3 +1,5 @@
+import 'package:dacn/Views/Login/Login.dart';
+import 'package:dacn/Views/Login/Register.dart';
 import 'package:dacn/Views/ThongTinTaiKhoang/AcountDetailPage.dart';
 import 'package:dacn/Views/NguPhap/BaiHocNguPhap.dart';
 import 'package:dacn/Views/NguPhap/BaiTapNguPhap.dart';

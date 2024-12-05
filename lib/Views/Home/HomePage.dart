@@ -82,9 +82,24 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 20),
               const Text(
                 'Chào mừng bạn đến với EasyTalk',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+              const SizedBox(height: 16),
+              // Ảnh logo giữa tiêu đề và phần menu bên dưới
+              Center(
+                child: Image.asset(
+                  'assets/eztalk2.jpg',
+                  width: 150,
+                  height: 150,
+                ),
+              ),
+              const SizedBox(height: 20),
+              // Menu chính
               ContainerMenuItem(
                 menuItems: [
                   MenuItem(
@@ -92,23 +107,36 @@ class _HomePageState extends State<HomePage> {
                     text: 'Bài học',
                     colorArrow: Colors.greenAccent,
                     menuOptions: [
-                      {'icon': Icons.chrome_reader_mode, 'text': 'Ngữ pháp', 'onClick': () => Navigator.pushNamed(context, '/nguphap')}, // Icon và text cho tùy chọn 1
-                      {'icon': Icons.transcribe_rounded, 'text': 'Phát âm', 'onClick': () => Navigator.pushNamed(context, '/phatam')}, // Icon và text cho tùy chọn 2
-                      {'icon': Icons.library_books, 'text': 'FlashCard'}, // Icon và text cho tùy chọn 3
-                    ], // Các mục lựa chọn
+                      {
+                        'icon': Icons.chrome_reader_mode,
+                        'text': 'Ngữ pháp',
+                        'onClick': () => Navigator.pushNamed(context, '/nguphap')
+                      },
+                      {
+                        'icon': Icons.transcribe_rounded,
+                        'text': 'Phát âm',
+                        'onClick': () => Navigator.pushNamed(context, '/phatam')
+                      },
+                      {'icon': Icons.library_books, 'text': 'FlashCard'},
+                    ],
                   ),
                   MenuItem(
                     icon: Icon(Icons.menu_book, color: Colors.blue),
                     text: 'Luyện tập',
                     colorArrow: Colors.blue,
                     menuOptions: [
-                      {'icon': Icons.chrome_reader_mode, 'text': 'Ngữ pháp'}, // Icon và text cho tùy chọn 1
-                      {'icon': Icons.transcribe_rounded, 'text': 'Phát âm', 'onClick': () => Navigator.pushNamed(context, '/phatam', arguments: 1)},// Icon và text cho tùy chọn 2
-                      {'icon': Icons.type_specimen_rounded, 'text': 'Từ vựng'},// Icon và text cho tùy chọn 3
-                    ], // Các mục lựa chọn
+                      {'icon': Icons.chrome_reader_mode, 'text': 'Ngữ pháp'},
+                      {
+                        'icon': Icons.transcribe_rounded,
+                        'text': 'Phát âm',
+                        'onClick': () =>
+                            Navigator.pushNamed(context, '/phatam', arguments: 1)
+                      },
+                      {'icon': Icons.type_specimen_rounded, 'text': 'Từ vựng'},
+                    ],
                   ),
                   MenuItem(
-                    icon: Icon(Icons.chat , color: Colors.yellowAccent),
+                    icon: Icon(Icons.chat, color: Colors.yellowAccent),
                     text: 'Chat AI',
                     colorArrow: Colors.blue,
                     onClickWithoutMenuOption: () {
@@ -116,7 +144,7 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                   MenuItem(
-                    icon: Icon(Icons.layers , color: Colors.deepOrange),
+                    icon: Icon(Icons.layers, color: Colors.deepOrange),
                     text: 'Tra cứu từ điển',
                     colorArrow: Colors.blue,
                   ),

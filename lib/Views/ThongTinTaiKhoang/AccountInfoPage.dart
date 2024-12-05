@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AccountInfoPage extends StatelessWidget {
+class AccountInfoPage extends StatefulWidget {
   final String userName;
   final int lessonsRead;
   final int exercisesCompleted;
@@ -19,29 +19,75 @@ class AccountInfoPage extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _AccountInfoPageState createState() => _AccountInfoPageState();
+}
+
+class _AccountInfoPageState extends State<AccountInfoPage> {
+  late TextEditingController _nameController;
+  bool _isEditing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.userName);
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tài khoản'),
-        centerTitle: true, // Căn giữa tiêu đề
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(_isEditing ? Icons.save : Icons.edit),
+            onPressed: () {
+              setState(() {
+                if (_isEditing) {
+                  // Lưu thông tin mới
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Thông tin đã được lưu!')),
+                  );
+                }
+                _isEditing = !_isEditing;
+              });
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start, // Căn trái nội dung
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Tên tài khoản
             const Text(
               'Tên tài khoản',
               style: TextStyle(
-                fontSize: 20.0, // Tăng kích thước chữ tiêu đề
+                fontSize: 20.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              userName,
-              style: const TextStyle(
-                fontSize: 18.0, // Tăng kích thước chữ thông tin
+            _isEditing
+                ? TextFormField(
+              controller: _nameController,
+              style: const TextStyle(fontSize: 18.0),
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Nhập tên tài khoản',
+              ),
+            )
+                : Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(
+                _nameController.text,
+                style: const TextStyle(fontSize: 18.0),
               ),
             ),
             const Divider(height: 24.0),
@@ -55,10 +101,8 @@ class AccountInfoPage extends StatelessWidget {
               ),
             ),
             Text(
-              '$lessonsRead',
-              style: const TextStyle(
-                fontSize: 18.0,
-              ),
+              '${widget.lessonsRead}',
+              style: const TextStyle(fontSize: 18.0),
             ),
             const Divider(height: 24.0),
 
@@ -71,10 +115,8 @@ class AccountInfoPage extends StatelessWidget {
               ),
             ),
             Text(
-              '$exercisesCompleted',
-              style: const TextStyle(
-                fontSize: 18.0,
-              ),
+              '${widget.exercisesCompleted}',
+              style: const TextStyle(fontSize: 18.0),
             ),
             const Divider(height: 24.0),
 
@@ -87,10 +129,8 @@ class AccountInfoPage extends StatelessWidget {
               ),
             ),
             Text(
-              '$doorsPassed',
-              style: const TextStyle(
-                fontSize: 18.0,
-              ),
+              '${widget.doorsPassed}',
+              style: const TextStyle(fontSize: 18.0),
             ),
             const Divider(height: 24.0),
 
@@ -103,10 +143,8 @@ class AccountInfoPage extends StatelessWidget {
               ),
             ),
             Text(
-              '$stagesCleared',
-              style: const TextStyle(
-                fontSize: 18.0,
-              ),
+              '${widget.stagesCleared}',
+              style: const TextStyle(fontSize: 18.0),
             ),
             const Divider(height: 24.0),
 
@@ -119,10 +157,8 @@ class AccountInfoPage extends StatelessWidget {
               ),
             ),
             Text(
-              '$totalPoints',
-              style: const TextStyle(
-                fontSize: 18.0,
-              ),
+              '${widget.totalPoints}',
+              style: const TextStyle(fontSize: 18.0),
             ),
           ],
         ),
