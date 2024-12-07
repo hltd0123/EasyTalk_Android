@@ -13,9 +13,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List<String> _images = [
-    'assets/hutech1.jpg',
-    'assets/hutech2.jpg',
-    'assets/hutech3.jpg',
+    'assets/eztalk.jpg',
+    'assets/eztalk1.jpg',
+    'assets/eztalk.jpg',
   ];
 
   final PageController _pageController = PageController();

@@ -1,5 +1,9 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:dacn/Model/Achievements.dart';
+import 'package:dacn/Model/User.dart';
 import 'package:dacn/Router/AppRouter.dart';
-import 'package:dacn/Service/APICall/UserService.dart';
+import 'package:dacn/Service/Local/GetDataFromMap.dart';
+import 'package:dacn/Service/Local/UserStoreService.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dacn/Views/NhacNho/Reminder.dart';
@@ -17,7 +21,7 @@ class AccountDetailPage extends StatefulWidget {
 }
 
 class _AccountDetailPageState extends State<AccountDetailPage> {
-  File? _image; // Biến lưu ảnh đã chọn
+  File? _image;
 
   // Hàm chọn ảnh từ thư viện
   Future<void> _pickImage() async {
@@ -34,17 +38,6 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.brightness_6),
-            onPressed: () {
-              // Nút chuyển chế độ sáng/tối
-            },
-          ),
-        ],
-      ),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(16.0),
@@ -91,20 +84,19 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
                 icon: const Icon(Icons.account_circle, color: Colors.white),
                 text: 'Thông tin tài khoản',
                 borderColor: Colors.blue,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AccountInfoPage(
-                        userName: 'Nguyen Van A',
-                        lessonsRead: 12,
-                        exercisesCompleted: 20,
-                        doorsPassed: 5,
-                        stagesCleared: 3,
-                        totalPoints: 1500,
+                onTap: () async {
+                  final data = await UserStoreService.getCurrentUserAndAchievements();
+                  if(data != null){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AccountInfoPage(
+                          user: GetDataFromMap.getUser(data)!,
+                          achievements: GetDataFromMap.getAchievements(data)!,
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  }
                 },
               ),
               const SizedBox(height: 8.0),
@@ -138,9 +130,19 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
                 text: 'Đăng xuất',
                 borderColor: Colors.blue,
                 onTap: () async {
-                  SharedPreferences prefs = await SharedPreferences.getInstance();
-                  await prefs.remove('token');
-                  Navigator.pushReplacementNamed(context, AppRouter.dangnhap);
+                  AwesomeDialog(
+                    context: context,
+                    dialogType: DialogType.warning,
+                    animType: AnimType.rightSlide,
+                    title: 'Đăng xuất',
+                    desc: 'Bạn có chắc chắn muốn đăng xuất',
+                    btnCancelOnPress: () {},
+                    btnOkOnPress: () async {
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      prefs.remove('token');
+                      Navigator.pushReplacementNamed(context, AppRouter.dangnhap);
+                    },
+                  ).show();
                 },
               ),
             ],

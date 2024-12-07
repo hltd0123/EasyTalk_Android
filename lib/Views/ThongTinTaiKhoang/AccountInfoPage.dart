@@ -1,166 +1,185 @@
+import 'package:dacn/Model/Achievements.dart';
+import 'package:dacn/Model/User.dart';
+import 'package:dacn/Service/APICall/UserService.dart';
+import 'package:dacn/Service/Local/UserStoreService.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AccountInfoPage extends StatefulWidget {
-  final String userName;
-  final int lessonsRead;
-  final int exercisesCompleted;
-  final int doorsPassed;
-  final int stagesCleared;
-  final int totalPoints;
+  final User user;
+  final Achievements achievements;
 
-  const AccountInfoPage({
-    required this.userName,
-    required this.lessonsRead,
-    required this.exercisesCompleted,
-    required this.doorsPassed,
-    required this.stagesCleared,
-    required this.totalPoints,
-    Key? key,
-  }) : super(key: key);
+  const AccountInfoPage({super.key, required this.user, required this.achievements});
 
   @override
   _AccountInfoPageState createState() => _AccountInfoPageState();
 }
 
 class _AccountInfoPageState extends State<AccountInfoPage> {
-  late TextEditingController _nameController;
-  bool _isEditing = false;
+  // Controllers để nhận giá trị từ các TextField trong dialog
+  final _currentPasswordController = TextEditingController();
+  final _newPasswordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    _nameController = TextEditingController(text: widget.userName);
+  Future<void> _changePassword() async {
+    String currentPassword = _currentPasswordController.text;
+    String newPassword = _newPasswordController.text;
+    String confirm = _confirmPasswordController.text;
+    if(await UserStoreService.changePassword(currentPassword, newPassword, confirm))
+    {
+      setState(() {
+        widget.user.password = newPassword;
+      });
+
+      // Đóng dialog và hiển thị thông báo thành công
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Cập nhật mật khẩu thành công')),
+      );
+    }
+    else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Thất bại, lỗi không thể cập nhật')),
+      );
+    }
   }
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
+  // Hàm hiển thị dialog đổi mật khẩu
+  void _showChangePasswordDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Change Password'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Ô nhập mật khẩu hiện tại
+              TextField(
+                controller: _currentPasswordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Mật khẩu hiện tại',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 10),
+              // Ô nhập mật khẩu mới
+              TextField(
+                controller: _newPasswordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Mật khẩu mới',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 10),
+              // Ô xác nhận mật khẩu mới
+              TextField(
+                controller: _confirmPasswordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Nhập lại mật khẫu mới',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Hủy'),
+            ),
+            ElevatedButton(
+              onPressed: _changePassword,
+              child: const Text('Đổi mật khẩu'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final emailController = TextEditingController(text: widget.user.email);
+    final usernameController = TextEditingController(text: widget.user.username);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tài khoản'),
+        leading: IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.arrow_back)),
+        title: Text('Thông tin', style: Theme.of(context).textTheme.headlineMedium),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(_isEditing ? Icons.save : Icons.edit),
-            onPressed: () {
-              setState(() {
-                if (_isEditing) {
-                  // Lưu thông tin mới
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Thông tin đã được lưu!')),
-                  );
-                }
-                _isEditing = !_isEditing;
-              });
-            },
-          ),
-        ],
+        backgroundColor: Colors.blue, // Màu chủ đạo là xanh dương
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Tên tài khoản
-            const Text(
-              'Tên tài khoản',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            _isEditing
-                ? TextFormField(
-              controller: _nameController,
-              style: const TextStyle(fontSize: 18.0),
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Nhập tên tài khoản',
-              ),
-            )
-                : Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(
-                _nameController.text,
-                style: const TextStyle(fontSize: 18.0),
-              ),
-            ),
-            const Divider(height: 24.0),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              // -- Form Fields
+              Form(
+                child: Column(
+                  children: [
+                    // Username
+                    TextFormField(
+                      controller: usernameController,
+                      decoration: const InputDecoration(
+                        label: Text('User Name'),
+                        prefixIcon: Icon(Icons.person_3),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
 
-            // Số bài học đã đọc
-            const Text(
-              'Số bài học đã đọc',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              '${widget.lessonsRead}',
-              style: const TextStyle(fontSize: 18.0),
-            ),
-            const Divider(height: 24.0),
+                    // Email
+                    TextFormField(
+                      controller: emailController, // Sử dụng controller để lấy giá trị
+                      decoration: const InputDecoration(
+                        label: Text('Email'),
+                        prefixIcon: Icon(Icons.email),
+                      ),
+                    ),
+                    const SizedBox(height: 50),
 
-            // Số bài tập đã làm
-            const Text(
-              'Số bài tập đã làm',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              '${widget.exercisesCompleted}',
-              style: const TextStyle(fontSize: 18.0),
-            ),
-            const Divider(height: 24.0),
-
-            // Các cửa đã vượt qua
-            const Text(
-              'Các cửa đã vượt qua',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              '${widget.doorsPassed}',
-              style: const TextStyle(fontSize: 18.0),
-            ),
-            const Divider(height: 24.0),
-
-            // Các chặng đã vượt qua
-            const Text(
-              'Các chặng đã vượt qua',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              '${widget.stagesCleared}',
-              style: const TextStyle(fontSize: 18.0),
-            ),
-            const Divider(height: 24.0),
-
-            // Tổng số điểm xếp hạng
-            const Text(
-              'Tổng số điểm xếp hạng',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              '${widget.totalPoints}',
-              style: const TextStyle(fontSize: 18.0),
-            ),
-          ],
+                    // Nút Cập nhật thông tin
+                    ElevatedButton(
+                      onPressed: () async {
+                        String updatedUsername = usernameController.text;
+                        String updatedEmail = emailController.text;
+                        if(await UserStoreService.updateProfile(updatedUsername, updatedEmail)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Cập nhật thành công')),
+                          );
+                        }
+                        else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Thất bại')),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        shape: const StadiumBorder(),
+                      ),
+                      child: const Text('Cập nhật thông tin', style: TextStyle(color: Colors.white)),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: _showChangePasswordDialog,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue, // Màu xanh dương cho nút
+                        shape: const StadiumBorder(),
+                      ),
+                      child: const Text('Đổi mật khẩu', style: TextStyle(color: Colors.white)),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

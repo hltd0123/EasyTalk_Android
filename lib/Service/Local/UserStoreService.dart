@@ -1,4 +1,6 @@
+import 'package:dacn/Model/User.dart';
 import 'package:dacn/Service/APICall/UserService.dart';
+import 'package:dacn/Service/Local/GetDataFromMap.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserStoreService{
@@ -52,5 +54,36 @@ class UserStoreService{
     on Exception{
       return false;
     }
+  }
+  static Future<Map<String, dynamic>?> getCurrentUserAndAchievements() async {
+    var data = await UserService.getUserProfile();
+    if(data == null){
+      reloadToken();
+      data = await UserService.getUserProfile();
+    }
+    if (data == null){
+      return null;
+    }
+    return data;
+  }
+  static Future<bool> changePassword(String currentPassword, String newPassword, String confirmPassword) async {
+    if(await UserService.changePassword(currentPassword, newPassword, confirmPassword)){
+      return true;
+    }
+    reloadToken();
+    if(await UserService.changePassword(currentPassword, newPassword, confirmPassword)){
+      return true;
+    }
+    return false;
+  }
+  static Future<bool> updateProfile(String userName, String email) async {
+    if(await UserService.updateProfile(userName, email)){
+      return true;
+    }
+    reloadToken();
+    if(await UserService.updateProfile(userName, email)){
+      return true;
+    }
+    return false;
   }
 }

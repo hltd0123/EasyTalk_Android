@@ -36,11 +36,18 @@ class _HanhTrinhState extends State<HanhTrinh> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            if (widget.isReload){
-              setState(() async {
-                widget.isReload = await UserStoreService.reloadToken();
+            if (widget.isReload) {
+              UserStoreService.reloadToken().then((isReloaded) {
+                setState(() {
+                  widget.isReload = isReloaded;
+                });
+              }).catchError((error) {
+                print('Error reloading');
               });
             }
+            return const Scaffold(
+              body: Text('Đang load data, vui lòng đợi xíu'),
+            );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text('No data available'));
           }

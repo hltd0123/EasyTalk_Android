@@ -1,3 +1,4 @@
+import 'package:dacn/Model/Achievements.dart';
 import 'package:dacn/Model/DictationExercise.dart';
 import 'package:dacn/Model/FlashCardList.dart';
 import 'package:dacn/Model/Grammar.dart';
@@ -8,6 +9,7 @@ import 'package:dacn/Model/Page.dart';
 import 'package:dacn/Model/Pronunciation.dart';
 import 'package:dacn/Model/PronunciationExercises.dart';
 import 'package:dacn/Model/Stage.dart';
+import 'package:dacn/Model/User.dart';
 import 'package:dacn/Model/UserProgress.dart';
 import 'package:dacn/Model/Vocabulary.dart';
 
@@ -52,11 +54,11 @@ class GetDataFromMap{
     return result['pronunciations'];
   }
 
-  static dynamic getUser(Map<String, dynamic> data) {
+  static User? getUser(Map<String, dynamic> data) {
     return data['user'];
   }
 
-  static dynamic getAchievements(Map<String, dynamic> data) {
+  static Achievements? getAchievements(Map<String, dynamic> data) {
     return data['achievements'];
   }
 

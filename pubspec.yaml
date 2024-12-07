@@ -53,6 +53,7 @@ dependencies:
   provider: ^6.1.2
   flutter_widget_from_html: ^0.15.3
   flip_card: ^0.7.0
+  awesome_dialog: ^3.2.1
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +76,8 @@ flutter:
     - assets/hutech2.jpg
     - assets/hutech3.jpg
     - assets/avatar.jpg
+    - assets/eztalk.jpg
+    - assets/eztalk1.jpg
     - assets/eztalk2.jpg
     - .env
   # The following line ensures that the Material Icons font is

@@ -16,7 +16,7 @@ Widget ExerciseCard({
       margin: const EdgeInsets.symmetric(horizontal: 16),
       child: ConstrainedBox(
         constraints: BoxConstraints(
-          maxHeight: screenHeight * 0.3,
+          maxHeight: screenHeight * 0.22,
         ),
         child: Column(
           children: [

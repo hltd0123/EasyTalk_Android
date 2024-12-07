@@ -1,5 +1,6 @@
 import 'package:dacn/Model/FlashCard.dart';
 import 'package:dacn/Views/AiChat/ChatPage.dart';
+import 'package:dacn/Views/Login/ForgotPassPage.dart';
 import 'package:dacn/Views/Login/Login.dart';
 import 'package:dacn/Views/Login/Register.dart';
 import 'package:dacn/Views/NguPhap/BaiTapNguPhap.dart';
@@ -28,6 +29,7 @@ class AppRouter {
   static const String baitaptuvung = '/baitaptuvung';
   static const String dangnhap = '/dangnhap';
   static const String dangky = '/dangky';
+  static const String quenmatkhau = '/forgotPassword';
 
   //Điều hướng theo tham số
   static Route<dynamic>? generateRoute(RouteSettings settings) {
@@ -63,6 +65,8 @@ class AppRouter {
         return customPageRoute(FlashCardStudying(flashCards: checkData));
       case baitaptuvung:
         return customPageRoute(const BaiTapTuVung());
+      case quenmatkhau:
+        return customPageRoute(const ForgotPassPage());
       default:
         return MaterialPageRoute(
           builder: (_) => const Scaffold(

@@ -62,6 +62,11 @@ class PronunciationExercisesProvider with ChangeNotifier {
     }
   }
 
+  void goToQuestion(int index){
+    _currentIndex = index;
+    notifyListeners();
+  }
+
   Future<void> startRecording() async {
     if (_recording) return; // Tránh gọi lại nếu đã đang ghi âm
     _recording = true;

@@ -14,7 +14,6 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _rememberMe = false;
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +43,8 @@ class _LoginState extends State<Login> {
                     ),
                     const SizedBox(height: 20),
                     // Tiêu đề "Đăng Nhập"
-                    Center(
-                      child: const Text(
+                    const Center(
+                      child: Text(
                         'Đăng Nhập',
                         style: TextStyle(
                           fontSize: 24,
@@ -110,8 +109,7 @@ class _LoginState extends State<Login> {
                       alignment: Alignment.centerLeft,
                       child: TextButton(
                         onPressed: () {
-                          // Xử lý hành động quên mật khẩu ở đây
-                          print('Quên mật khẩu');
+                          Navigator.pushNamed(context, AppRouter.quenmatkhau);
                         },
                         child: const Text(
                           'Quên mật khẩu?',
@@ -160,7 +158,7 @@ class _LoginState extends State<Login> {
                     Center(
                       child: TextButton(
                         onPressed: () {
-                          Navigator.pushReplacementNamed(context, AppRouter.dangky);
+                          Navigator.pushNamed(context, AppRouter.dangky);
                         },
                         child: const Text(
                           'Chưa có tài khoản? Đăng ký ngay',

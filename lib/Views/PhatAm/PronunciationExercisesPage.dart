@@ -28,7 +28,7 @@ class PronunciationExercisesPage extends StatelessWidget {
                 onPressed: provider.hasPrevious
                     ? provider.previousQuestion
                     : () => Navigator.of(context).pop(),
-                icon: Icon(
+                icon: const Icon(
                     Icons.arrow_back, // Biểu tượng "next"
                     color: Colors.black // Màu của biểu tượng
                 ),
@@ -39,7 +39,7 @@ class PronunciationExercisesPage extends StatelessWidget {
                   onPressed: provider.hasNext
                       ? provider.skipQuestion
                       : () => Navigator.of(context).pop(),
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.arrow_forward, // Biểu tượng "next"
                     color: Colors.black // Màu của biểu tượng
                   ),
@@ -53,12 +53,6 @@ class PronunciationExercisesPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 10),
-                    Text(
-                      question.question ?? '',
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
-                    ),
                     const SizedBox(height: 20),
                     if (question.type == "multiple-choice")
                       _buildMultipleChoice(context, question, provider),
@@ -72,27 +66,30 @@ class PronunciationExercisesPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(
                         provider.questions.length,
-                            (index) => Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 5),
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            color: provider.currentIndex == index
-                                ? Colors.blue
-                                : Colors.grey.shade300,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                            child: Text(
-                              "${index + 1}",
-                              style: TextStyle(
-                                color: provider.currentIndex == index
-                                    ? Colors.white
-                                    : Colors.black,
+                            (index) => GestureDetector(
+                              onTap: () => provider.goToQuestion(index),
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(horizontal: 5),
+                                width: 30,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                  color: provider.currentIndex == index
+                                      ? Colors.blue
+                                      : Colors.grey.shade300,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "${index + 1}",
+                                    style: TextStyle(
+                                      color: provider.currentIndex == index
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
                       ),
                     ),
                     const SizedBox(height: 20),

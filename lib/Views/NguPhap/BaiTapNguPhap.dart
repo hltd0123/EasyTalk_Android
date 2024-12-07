@@ -13,11 +13,9 @@ class BaiTapNguPhap extends StatefulWidget {
 }
 
 class _BaiTapNguPhapState extends State<BaiTapNguPhap> {
-
   // Tạo một Future để lấy dữ liệu từ API
   final Future<Map<String, dynamic>> dataExGet = GrammarExerciseService.getGrammarExercisesOnPage();
 
-  // Hàm điều hướng đến bài tập ngữ pháp cụ thể
   void _goToGrammarExercise(GrammarExercise grammarExercise) {
     Navigator.push(
       context,
@@ -100,7 +98,7 @@ class _GrammarExercisePageState extends State<GrammarExercisePage> {
 
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Bài kiểm tra'),
+              title: const Text('Luyện tập ngữ pháp'),
               backgroundColor: Colors.blue.shade700,
               centerTitle: true,
               automaticallyImplyLeading: false,
