@@ -143,11 +143,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.pushNamed(context, '/aichat');
                     },
                   ),
-                  MenuItem(
-                    icon: Icon(Icons.layers , color: Colors.deepOrange),
-                    text: 'Tra cứu từ điển',
-                    colorArrow: Colors.blue,
-                  ),
+
                 ],
               ),
             ],

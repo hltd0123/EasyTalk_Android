@@ -4,7 +4,7 @@ class Journey {
   String id;
   String title;
   List<Gate> gates;
-  int progressPercentage;
+  double progressPercentage;
 
   Journey({
     required this.id,
@@ -14,11 +14,19 @@ class Journey {
   });
 
   factory Journey.fromJson(Map<String, dynamic> json) {
+    var i = json['progressPercentage'] ?? 0;
+    double per = 0;
+    if(i is int){
+      per = i.toDouble();
+    }
+    else {
+      per = i;
+    }
     return Journey(
       id: json['_id'],
       title: json['title'],
       gates: List<Gate>.from(json['gates'].map((x) => Gate.fromJson(x))),
-      progressPercentage: json['progressPercentage'] ?? 0,
+      progressPercentage: per,
     );
   }
 }

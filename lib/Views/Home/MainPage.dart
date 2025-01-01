@@ -15,8 +15,7 @@ import 'package:provider/provider.dart';
 enum MainPageBottomNavigation {
   home(icon: Icons.home, label: 'Trang chủ', selectedItem: 0),
   lessons(icon: Icons.edit_road, label: 'Hành trình', selectedItem: 1),
-  account(icon: Icons.text_snippet, label: 'Bài viết', selectedItem: 2),
-  settings(icon: Icons.settings_rounded, label: 'Cài đặt', selectedItem: 3);
+  settings(icon: Icons.settings_rounded, label: 'Cài đặt', selectedItem: 2);
 
   final IconData icon;
   final String label;
@@ -44,7 +43,7 @@ class MainPage extends StatelessWidget {
               return const HomePage();
             case 1:
               return HanhTrinh();
-            case 3:
+            case 2:
               return const AccountDetailPage();
 
             default:
